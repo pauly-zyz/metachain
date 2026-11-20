@@ -281,3 +281,17 @@ Keputusan dan alasannya:
 - Uniswap: [v4 deployments](https://developers.uniswap.org/contracts/v4/deployments),
   [v3 Robinhood deployments](https://developers.uniswap.org/docs/protocols/v3/deployments/v3-robinhood-chain-deployments)
 - Verifikasi on-chain: RPC `https://rpc.mainnet.chain.robinhood.com`, `https://rpc.testnet.chain.robinhood.com` — skrip di `scripts/feasibility/`
+
+## 9. Pembaruan setelah Fase 1–2 (keputusan yang disetujui, plus temuan implementasi)
+
+- **Smart account: Kernel v3.1, bukan Safe.** Adapter Safe7579 ada di mainnet, tetapi launchpad-nya
+  (`0x7579011a…00ff`) tidak ter-deploy di mainnet maupun testnet, dan Safe7579 tidak ada di testnet. Sesuai aturan
+  cadangan di §6 butir 2, dipakai Kernel v3.1 (ter-deploy di kedua jaringan) + Rhinestone Smart Sessions (juga
+  ter-deploy di keduanya). Lihat `docs/addresses.md`.
+- **ERC-7562 melarang `TIMESTAMP` saat validasi**, sehingga harga oracle di-cache lewat `updatePrice()` dan validasi
+  mengembalikan `validUntil`. Batas belanja agen per periode ditegakkan oleh `AgentPayments` saat eksekusi.
+- **EntryPoint v0.7 mengenakan penalti 10% atas gas eksekusi yang tidak terpakai** setelah postOp. Paymaster menambahkan
+  batas atas penalti ini agar tidak pernah rugi.
+- **Robinhood Chain mendukung opcode Cancun** (PUSH0, MCOPY, TSTORE/TLOAD), diverifikasi via `eth_call` di kedua jaringan.
+- **Fork test mainnet** dengan EntryPoint, META, Chainlink, dan TWAP V3 asli lulus. META dikonfirmasi **bukan
+  fee-on-transfer** (delta saldo tepat), dan biaya gas ≈ 0,0000143 META per op.
