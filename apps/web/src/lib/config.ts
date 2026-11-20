@@ -7,6 +7,7 @@ import {
   type DeploymentJson,
   type MetaChainAddresses,
 } from "@metachain/sdk";
+import { BUILTIN_DEPLOYMENTS } from "./deployments";
 
 export type NetworkName = "local" | "testnet" | "mainnet";
 
@@ -40,7 +41,7 @@ export function getConfig(): AppConfig {
   const rpcUrl =
     process.env.NEXT_PUBLIC_RPC_URL || (network === "local" ? "http://127.0.0.1:8545" : base.rpcUrls.default.http[0]!);
   const chain = network === "local" ? localFork(base, rpcUrl) : base;
-  const parsed = parseDeployment();
+  const parsed = parseDeployment() ?? BUILTIN_DEPLOYMENTS[chain.id] ?? null;
   // Ignore a deployment file that belongs to another chain (e.g. testnet JSON on a mainnet site).
   const deployment = parsed && Number(parsed.chainId) === chain.id ? parsed : null;
   return {

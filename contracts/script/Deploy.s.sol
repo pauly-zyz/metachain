@@ -215,6 +215,6 @@ contract DeployMainnet is DeployBase {
             vm.envUint("PAYMASTER_STAKE_WEI")
         );
         vm.stopBroadcast();
-        writeDeployment("robinhood-mainnet", d);
+        writeDeployment(vm.envOr("DEPLOYMENT_NAME", string("robinhood-mainnet")), d);
     }
 }
