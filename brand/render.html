@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=JetBrains+Mono:wght@500&family=Inter:wght@500&display=swap" />
+<style>body{margin:0;background:#000}canvas{display:block}</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+// META CHAIN brand renderer — original mark (diamond + gas flame), Meta-blue palette.
+// Not affiliated with Meta Platforms, Inc. or Robinhood.
+const BLUE = "#0866ff", CYAN = "#5cc8ff", BG = "#05070d", BONE = "#e7edf7", MUTE = "#64718a";
+const DIAMOND = new Path2D("M12 1 23 12 12 23 1 12Z");
+const FLAME = new Path2D("M12 6c2.6 2.4 3.6 4.4 3.6 6.4A3.6 3.6 0 0 1 12 16a3.6 3.6 0 0 1-3.6-3.6c0-1.3.6-2.4 1.6-3.4.1 1 .6 1.8 1.4 2.2-.3-1.9.1-3.6.6-5.2Z");
+const TAU = Math.PI * 2;
+const c = document.getElementById("c");
+const ctx = c.getContext("2d");
+
+function glyph(cx, cy, size, flicker = 0) {
+  const s = size / 24;
+  ctx.save();
+  ctx.translate(cx - 12 * s, cy - 12 * s);
+  ctx.scale(s, s);
+  ctx.shadowColor = BLUE; ctx.shadowBlur = 14;
+  ctx.lineWidth = 1.5; ctx.strokeStyle = BLUE; ctx.stroke(DIAMOND);
+  ctx.shadowBlur = 0;
+  ctx.globalAlpha = 0.18; ctx.fillStyle = BLUE; ctx.fill(DIAMOND); ctx.globalAlpha = 1;
+  // flame (slight breathing scale)
+  ctx.translate(12, 16); ctx.scale(1 + flicker * 0.04, 1 + flicker * 0.08); ctx.translate(-12, -16);
+  const g = ctx.createLinearGradient(12, 6, 12, 16);
+  g.addColorStop(0, "#d6f1ff"); g.addColorStop(0.45, CYAN); g.addColorStop(1, BLUE);
+  ctx.shadowColor = CYAN; ctx.shadowBlur = 10;
+  ctx.fillStyle = g; ctx.fill(FLAME);
+  ctx.restore();
+}
+
+function grid(w, h, step, alpha) {
+  ctx.strokeStyle = `rgba(231,237,247,${alpha})`; ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let x = 0.5; x < w; x += step) { ctx.moveTo(x, 0); ctx.lineTo(x, h); }
+  for (let y = 0.5; y < h; y += step) { ctx.moveTo(0, y); ctx.lineTo(w, y); }
+  ctx.stroke();
+}
+
+function brackets(x, y, w, h, len, color) {
+  ctx.strokeStyle = color; ctx.lineWidth = 2;
+  ctx.beginPath();
+  [[x, y, 1, 1], [x + w, y, -1, 1], [x, y + h, 1, -1], [x + w, y + h, -1, -1]].forEach(([px, py, dx, dy]) => {
+    ctx.moveTo(px + dx * len, py); ctx.lineTo(px, py); ctx.lineTo(px, py + dy * len);
+  });
+  ctx.stroke();
+}
+
+function gauge(cx, cy, R, lit, t, segs = 56, sweepHead = -1) {
+  const start = 0.75 * Math.PI, sweep = 1.5 * Math.PI, rIn = R * 0.8;
+  // rotating ticks
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(t * TAU / 8);
+  for (let i = 0; i < 120; i++) {
+    const a = i * TAU / 120, r0 = R * 1.12, r1 = i % 10 === 0 ? R * 1.05 : R * 1.085;
+    ctx.strokeStyle = `rgba(231,237,247,${i % 10 === 0 ? 0.35 : 0.12})`; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(Math.cos(a) * r0, Math.sin(a) * r0); ctx.lineTo(Math.cos(a) * r1, Math.sin(a) * r1); ctx.stroke();
+  }
+  ctx.restore();
+  for (let i = 0; i < segs; i++) {
+    const a0 = start + (i / segs) * sweep + 0.012, a1 = start + ((i + 1) / segs) * sweep - 0.012;
+    const on = i < lit, hot = i / segs;
+    // travelling highlight ("fuel flowing" through the gauge)
+    let boost = 0;
+    if (sweepHead >= 0) { const d = (sweepHead - i + segs) % segs; boost = d < 10 ? 1 - d / 10 : 0; }
+    ctx.beginPath(); ctx.arc(cx, cy, R, a0, a1); ctx.arc(cx, cy, rIn, a1, a0, true); ctx.closePath();
+    if (on && boost > 0.05) { ctx.fillStyle = boost > 0.7 ? "#e6f6ff" : CYAN; ctx.globalAlpha = 0.6 + 0.4 * boost; ctx.shadowColor = CYAN; ctx.shadowBlur = 18 * boost + 8; }
+    else if (on) { ctx.fillStyle = hot > 0.8 ? CYAN : BLUE; ctx.globalAlpha = 0.55 + hot * 0.45; ctx.shadowColor = BLUE; ctx.shadowBlur = 12; }
+    else { ctx.fillStyle = "#182133"; ctx.globalAlpha = 0.9; ctx.shadowBlur = 0; }
+    ctx.fill(); ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+  }
+  ctx.strokeStyle = "rgba(8,102,255,0.35)"; ctx.setLineDash([2, 6]);
+  ctx.beginPath(); ctx.arc(cx, cy, rIn - 10, 0, TAU); ctx.stroke(); ctx.setLineDash([]);
+}
+
+// dot-matrix blue gas flame, periodic in t
+function flameField(x0, y0, w, h, t, cell, cxRel = 0.5, strength = 1) {
+  const cols = Math.ceil(w / cell), rows = Math.ceil(h / cell), cx = x0 + w * cxRel;
+  for (let j = 0; j < rows; j++) {
+    const y = y0 + j * cell, up = 1 - (y - y0) / h;
+    for (let i = 0; i < cols; i++) {
+      const x = x0 + i * cell;
+      const dx = (x - cx) / (w * (0.14 + up * 0.2));
+      const sway = Math.sin(TAU * t + j * 0.35) * 0.3 + Math.sin(TAU * 2 * t + j * 0.8) * 0.1;
+      const col = Math.exp(-((dx - sway * up) ** 2) * 1.6);
+      const height = Math.max(0, 1 - up * 1.2);
+      const flick = 0.62 + 0.38 * Math.sin(TAU * 3 * t + i * 0.7 + j * 0.45) * Math.sin(TAU * t + i * 0.13);
+      let v = col * height * flick * strength;
+      v += 0.05 * (0.5 + 0.5 * Math.sin(i * 0.35 + TAU * t) * Math.cos(j * 0.31 - TAU * t));
+      if (v < 0.04) continue;
+      const a = Math.min(1, v), hot = Math.min(1, Math.max(0, (v - 0.55) * 2.2));
+      ctx.fillStyle = `rgba(${Math.round(8 + hot * 140)},${Math.round(102 + hot * 128)},255,${a * 0.85})`;
+      const s = a > 0.6 ? cell - 3 : a > 0.25 ? cell - 5 : cell - 8;
+      ctx.fillRect(x + (cell - s) / 2, y + (cell - s) / 2, s, s);
+    }
+  }
+}
+
+function spacedText(text, x, y, spacing) {
+  let cx = x;
+  for (const ch of text) { ctx.fillText(ch, cx, y); cx += ctx.measureText(ch).width + spacing; }
+  return cx;
+}
+
+window.drawLogo = (size) => {
+  c.width = size; c.height = size;
+  const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size * 0.7);
+  g.addColorStop(0, "#0d2350"); g.addColorStop(0.55, "#07101f"); g.addColorStop(1, BG);
+  ctx.fillStyle = g; ctx.fillRect(0, 0, size, size);
+  ctx.save(); ctx.globalAlpha = 0.6; grid(size, size, size / 16, 0.05); ctx.restore();
+  flameField(0, size * 0.42, size, size * 0.58, 0.15, size / 40, 0.5, 0.55);
+  // vignette to keep the mark readable
+  const v = ctx.createRadialGradient(size / 2, size / 2, size * 0.18, size / 2, size / 2, size * 0.72);
+  v.addColorStop(0, "rgba(5,7,13,0.55)"); v.addColorStop(1, "rgba(5,7,13,0)");
+  ctx.fillStyle = v; ctx.fillRect(0, 0, size, size);
+  gauge(size / 2, size / 2, size * 0.39, 42, 0.0, 56);
+  glyph(size / 2, size / 2, size * 0.46, 0);
+};
+
+window.drawBanner = (w, h, t) => {
+  c.width = w; c.height = h;
+  ctx.fillStyle = BG; ctx.fillRect(0, 0, w, h);
+  const glow = ctx.createRadialGradient(w * 0.8, h * 0.55, 0, w * 0.8, h * 0.55, h * 1.1);
+  glow.addColorStop(0, "rgba(8,102,255,0.28)"); glow.addColorStop(1, "rgba(8,102,255,0)");
+  ctx.fillStyle = glow; ctx.fillRect(0, 0, w, h);
+  grid(w, h, 50, 0.04);
+  // flame under the gauge
+  flameField(w * 0.56, h * 0.22, w * 0.44, h * 0.78, t, 12, 0.55, 1.45);
+  const fade = ctx.createLinearGradient(w * 0.5, 0, w * 0.62, 0);
+  fade.addColorStop(0, BG); fade.addColorStop(1, "rgba(5,7,13,0)");
+  ctx.fillStyle = fade; ctx.fillRect(w * 0.5, 0, w * 0.12, h);
+
+  // gauge: lit segments breathe 70%→95% and back (periodic)
+  const lit = 50;
+  gauge(w * 0.8, h * 0.52, h * 0.33, lit, t, 56, (t * lit) % lit);
+  ctx.textAlign = "center";
+  ctx.fillStyle = BLUE; ctx.font = "500 15px 'JetBrains Mono'"; ctx.fillText("GAS TOKEN", w * 0.8, h * 0.52 - 34);
+  ctx.fillStyle = "#fff"; ctx.shadowColor = BLUE; ctx.shadowBlur = 26;
+  ctx.font = "700 64px 'Chakra Petch'"; ctx.fillText("META", w * 0.8, h * 0.52 + 26); ctx.shadowBlur = 0;
+  ctx.fillStyle = MUTE; ctx.font = "500 13px 'JetBrains Mono'"; ctx.fillText("PEGGED IN USD", w * 0.8, h * 0.52 + 56);
+  ctx.textAlign = "left";
+
+  // left: brand
+  const L = 90;
+  glyph(L + 34, 110, 64, Math.sin(TAU * 2 * t));
+  ctx.fillStyle = "#fff"; ctx.font = "600 30px 'Chakra Petch'";
+  let x = spacedText("META", L + 86, 121, 9);
+  ctx.fillStyle = BLUE; x = spacedText(" · ", x, 121, 4);
+  ctx.fillStyle = "#fff"; spacedText("CHAIN", x, 121, 9);
+
+  ctx.font = "700 104px 'Chakra Petch'"; ctx.fillStyle = "#fff";
+  ctx.fillText("EQUITY IS", L, 262);
+  ctx.fillStyle = BLUE; ctx.shadowColor = BLUE; ctx.shadowBlur = 30 + 10 * Math.sin(TAU * t);
+  ctx.fillText("FUEL.", L, 362); ctx.shadowBlur = 0;
+
+  ctx.fillStyle = BONE; ctx.font = "500 24px Inter";
+  ctx.fillText("Pay gas on Robinhood Chain with META Stock Token.", L, 412);
+  ctx.fillStyle = MUTE; ctx.font = "500 13px 'JetBrains Mono'";
+  spacedText("ERC-4337 PAYMASTER  ·  CHAINLINK + TWAP ORACLE  ·  AI AGENT PAYMENTS", L, 448, 2.2);
+  ctx.fillStyle = "rgba(100,113,138,0.85)"; ctx.font = "500 11px 'JetBrains Mono'";
+  ctx.fillText("Not affiliated with Meta Platforms, Inc. or Robinhood. Not available to U.S. Persons.", L, h - 22);
+
+  // HUD frame + scanline
+  brackets(24, 24, w - 48, h - 48, 26, "rgba(8,102,255,0.9)");
+  const sy = ((t * h * 1.4) % (h * 1.4)) - h * 0.2;
+  const sl = ctx.createLinearGradient(0, sy - 40, 0, sy);
+  sl.addColorStop(0, "rgba(92,200,255,0)"); sl.addColorStop(1, "rgba(92,200,255,0.10)");
+  ctx.fillStyle = sl; ctx.fillRect(w * 0.55, sy - 40, w * 0.45, 40);
+  ctx.fillStyle = "rgba(231,237,247,0.5)"; ctx.font = "500 11px 'JetBrains Mono'";
+  const label = "ROBINHOOD CHAIN · 4663";
+  const lw = ctx.measureText(label).width;
+  ctx.textAlign = "right"; ctx.fillText(label, w - 52, 56); ctx.textAlign = "left";
+  ctx.fillStyle = "#3ddc84"; ctx.globalAlpha = 0.45 + 0.55 * Math.abs(Math.sin(TAU * 2 * t));
+  ctx.fillRect(w - 52 - lw - 16, 48, 7, 7); ctx.globalAlpha = 1;
+};
+
+window.ready = document.fonts.ready.then(() => Promise.all([
+  document.fonts.load("700 64px 'Chakra Petch'"), document.fonts.load("600 30px 'Chakra Petch'"),
+  document.fonts.load("500 13px 'JetBrains Mono'"), document.fonts.load("500 24px Inter"),
+])).then(() => true);
+</script>
+</body>
+</html>
