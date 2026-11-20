@@ -64,7 +64,7 @@ export default function AgentsPage() {
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<{ tone: "good" | "bad" | "neutral"; msg: string; hash?: string } | null>(null);
   const [form, setForm] = useState({
-    label: "agen-inferensi",
+    label: "inference-agent",
     perPeriodMeta: "0.05",
     perPeriodUsd: "25",
     periodHours: "1",
@@ -123,7 +123,7 @@ export default function AgentsPage() {
   async function createSession() {
     if (!account || !a) return;
     setBusy(true);
-    setStatus({ tone: "neutral", msg: "Membuat session key…" });
+    setStatus({ tone: "neutral", msg: "Creating session key…" });
     try {
       const key = generatePrivateKey();
       const sessionKey = privateKeyToAccount(key);
@@ -153,7 +153,7 @@ export default function AgentsPage() {
       const c = createMetaAccountClient({ account, chain: config.chain, client, bundlerUrl: config.bundlerUrl, addresses: a });
       const hash = await c.sendUserOperation({ calls });
       const rec = await c.waitForUserOperationReceipt({ hash });
-      if (!rec.success) throw new Error("UserOperation gagal");
+      if (!rec.success) throw new Error("UserOperation failed");
 
       const stored: StoredSession = {
         permissionId,
@@ -177,9 +177,9 @@ export default function AgentsPage() {
         addresses: { paymaster: a.paymaster, agentPayments: a.agentPayments, smartSessions: a.smartSessions, meta: a.meta },
         bundlerUrl: config.bundlerUrl,
       });
-      setStatus({ tone: "good", msg: "Session key dibuat — kredensial agen diunduh.", hash: rec.receipt.transactionHash });
+      setStatus({ tone: "good", msg: "Session key created — agent credentials downloaded.", hash: rec.receipt.transactionHash });
     } catch (e) {
-      setStatus({ tone: "bad", msg: `Gagal: ${errMsg(e)}` });
+      setStatus({ tone: "bad", msg: `Failed: ${errMsg(e)}` });
     } finally {
       setBusy(false);
     }
@@ -188,16 +188,16 @@ export default function AgentsPage() {
   async function revoke(s: StoredSession) {
     if (!account || !a) return;
     setBusy(true);
-    setStatus({ tone: "neutral", msg: "Mencabut session…" });
+    setStatus({ tone: "neutral", msg: "Revoking session…" });
     try {
       const c = createMetaAccountClient({ account, chain: config.chain, client, bundlerUrl: config.bundlerUrl, addresses: a });
       const hash = await c.sendUserOperation({ calls: getRevokeAgentSessionCalls({ permissionId: s.permissionId }) });
       const rec = await c.waitForUserOperationReceipt({ hash });
-      if (!rec.success) throw new Error("UserOperation gagal");
-      setStatus({ tone: "good", msg: "Session dicabut.", hash: rec.receipt.transactionHash });
+      if (!rec.success) throw new Error("UserOperation failed");
+      setStatus({ tone: "good", msg: "Session revoked.", hash: rec.receipt.transactionHash });
       await statuses.refetch();
     } catch (e) {
-      setStatus({ tone: "bad", msg: `Gagal: ${errMsg(e)}` });
+      setStatus({ tone: "bad", msg: `Failed: ${errMsg(e)}` });
     } finally {
       setBusy(false);
     }
@@ -208,48 +208,48 @@ export default function AgentsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-4xl font-semibold uppercase leading-none text-white sm:text-5xl">Agen AI</h1>
+        <h1 className="font-display text-4xl font-semibold uppercase leading-none text-white sm:text-5xl">AI agents</h1>
         <p className="mt-1 text-sm text-bone-mute">
-          Beri agen AI session key yang hanya boleh memanggil <code>AgentPayments.pay</code>, dengan masa berlaku, batas jumlah
-          pemakaian, batas belanja per periode (META & USD), rate limit, dan plafon allowance. Gas dibayar META.
+          Give an AI agent a session key that may only call <code>AgentPayments.pay</code>, with an expiry, a usage cap,
+          per-period spending limits (META & USD), a rate limit and an allowance ceiling. Gas is paid in META.
         </p>
       </div>
-      {!account && <Notice>Hubungkan wallet dan aktifkan smart account di halaman Akun terlebih dahulu.</Notice>}
-      {account && !ready && <Notice tone="bad">Smart account belum aktif (deploy + approve) — buka halaman Akun.</Notice>}
+      {!account && <Notice>Connect your wallet and activate your smart account on the Account page first.</Notice>}
+      {account && !ready && <Notice tone="bad">Smart account is not active yet (deploy + approve) — open the Account page.</Notice>}
 
       {account && a && (
         <div className="grid gap-6 md:grid-cols-2">
-          <Card title="Buat session key">
+          <Card title="Create session key">
             <div className="grid grid-cols-2 gap-3">
               <Field label="Label" value={form.label} onChange={set("label")} />
-              <Field label="Berlaku (hari)" value={form.validDays} onChange={set("validDays")} />
-              <Field label="Maks. META / periode" value={form.perPeriodMeta} onChange={set("perPeriodMeta")} />
-              <Field label="Maks. USD / periode" value={form.perPeriodUsd} onChange={set("perPeriodUsd")} hint="Dinilai oracle; 0 = tanpa batas USD" />
-              <Field label="Periode (jam)" value={form.periodHours} onChange={set("periodHours")} />
-              <Field label="Maks. transaksi / periode" value={form.maxTx} onChange={set("maxTx")} hint="Rate limit" />
-              <Field label="Maks. pemakaian total" value={form.maxUses} onChange={set("maxUses")} />
-              <Field label="Plafon allowance (META)" value={form.allowance} onChange={set("allowance")} />
+              <Field label="Valid for (days)" value={form.validDays} onChange={set("validDays")} />
+              <Field label="Max META / period" value={form.perPeriodMeta} onChange={set("perPeriodMeta")} />
+              <Field label="Max USD / period" value={form.perPeriodUsd} onChange={set("perPeriodUsd")} hint="Oracle-valued; 0 = no USD cap" />
+              <Field label="Period (hours)" value={form.periodHours} onChange={set("periodHours")} />
+              <Field label="Max payments / period" value={form.maxTx} onChange={set("maxTx")} hint="Rate limit" />
+              <Field label="Max total uses" value={form.maxUses} onChange={set("maxUses")} />
+              <Field label="Allowance cap (META)" value={form.allowance} onChange={set("allowance")} />
             </div>
             <div className="mt-4">
               <Button disabled={busy || !ready} onClick={createSession}>
-                Buat & unduh kredensial agen
+                Create & download agent credentials
               </Button>
             </div>
             <p className="mt-2 text-xs text-bone-mute">
-              Kunci privat session dibuat di browser dan hanya diberikan sebagai file unduhan; aplikasi tidak menyimpannya.
+              The session private key is generated in your browser and only handed out as a download; the app never stores it.
             </p>
           </Card>
 
-          <Card title="Sisa batas periode ini (META)">
+          <Card title="Remaining this period (META)">
             {limits.data ? (
               <>
-                <Row label="Sisa jumlah">{limits.data[0] > 10n ** 40n ? "tanpa batas" : meta(limits.data[0])}</Row>
-                <Row label="Sisa USD">{limits.data[1] > 10n ** 40n ? "tanpa batas" : usd(limits.data[1], 2)}</Row>
-                <Row label="Sisa transaksi">{limits.data[2] > 10n ** 40n ? "tanpa batas" : limits.data[2].toString()}</Row>
-                <Row label="Periode berakhir">{ts(limits.data[3])}</Row>
+                <Row label="Amount left">{limits.data[0] > 10n ** 40n ? "unlimited" : meta(limits.data[0])}</Row>
+                <Row label="USD left">{limits.data[1] > 10n ** 40n ? "unlimited" : usd(limits.data[1], 2)}</Row>
+                <Row label="Payments left">{limits.data[2] > 10n ** 40n ? "unlimited" : limits.data[2].toString()}</Row>
+                <Row label="Period ends">{ts(limits.data[3])}</Row>
               </>
             ) : (
-              <p className="text-sm text-bone-mute">Belum ada batas yang diatur.</p>
+              <p className="text-sm text-bone-mute">No limit configured yet.</p>
             )}
           </Card>
         </div>
@@ -263,7 +263,7 @@ export default function AgentsPage() {
                 <tr>
                   <th className="py-2">Label</th>
                   <th>Session key</th>
-                  <th>Berlaku s/d</th>
+                  <th>Valid until</th>
                   <th>Status</th>
                   <th />
                 </tr>
@@ -281,17 +281,17 @@ export default function AgentsPage() {
                         {enabled === undefined ? (
                           <Badge tone="neutral">…</Badge>
                         ) : !enabled ? (
-                          <Badge tone="bad">Dicabut</Badge>
+                          <Badge tone="bad">Revoked</Badge>
                         ) : expired ? (
-                          <Badge tone="warn">Kedaluwarsa</Badge>
+                          <Badge tone="warn">Expired</Badge>
                         ) : (
-                          <Badge tone="good">Aktif</Badge>
+                          <Badge tone="good">Active</Badge>
                         )}
                       </td>
                       <td className="text-right">
                         {enabled && (
                           <Button variant="danger" disabled={busy} onClick={() => revoke(s)}>
-                            Cabut
+                            Revoke
                           </Button>
                         )}
                       </td>
@@ -305,15 +305,15 @@ export default function AgentsPage() {
       )}
 
       {account && a && (
-        <Card title="Riwayat pembayaran & receipt">
+        <Card title="Payment history & receipts">
           {history.data && history.data.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="text-left font-mono text-[10px] uppercase tracking-wide2 text-bone-mute">
                   <tr>
                     <th className="py-2">#</th>
-                    <th>Penerima</th>
-                    <th>Jumlah</th>
+                    <th>Payee</th>
+                    <th>Amount</th>
                     <th>USD</th>
                     <th>Memo</th>
                     <th>memoHash</th>
@@ -338,7 +338,7 @@ export default function AgentsPage() {
               </table>
             </div>
           ) : (
-            <p className="text-sm text-bone-mute">Belum ada pembayaran agen dari akun ini.</p>
+            <p className="text-sm text-bone-mute">No agent payments from this account yet.</p>
           )}
         </Card>
       )}

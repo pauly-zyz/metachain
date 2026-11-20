@@ -7,14 +7,14 @@ import { DisclaimerBanner } from "@/components/DisclaimerBanner";
 export const metadata: Metadata = {
   title: "META CHAIN — Equity is fuel",
   description:
-    "Bayar gas di Robinhood Chain dengan META Stock Token (ERC-4337 paymaster), dipatok USD dan dihargai oracle Chainlink + TWAP. Tidak berafiliasi dengan Meta Platforms maupun Robinhood.",
+    "Pay gas on Robinhood Chain with META Stock Token (ERC-4337 paymaster), pegged in USD and priced by Chainlink + a TWAP circuit breaker. Not affiliated with Meta Platforms or Robinhood.",
 };
 
-export const viewport: Viewport = { themeColor: "#07070a" };
+export const viewport: Viewport = { themeColor: "#05070d" };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="id">
+    <html lang="en">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />

@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 
 const LINKS = [
-  { href: "#cara-kerja", label: "Cara kerja" },
-  { href: "#harga", label: "Harga" },
-  { href: "#agen", label: "Agen AI" },
-  { href: "#arsitektur", label: "Arsitektur" },
+  { href: "#how-it-works", label: "How it works" },
+  { href: "#pricing", label: "Pricing" },
+  { href: "#agents", label: "AI agents" },
+  { href: "#architecture", label: "Architecture" },
   { href: "#developer", label: "Developer" },
   { href: "#faq", label: "FAQ" },
 ];
@@ -47,7 +47,7 @@ export function SiteNav() {
             ORACLE <span className="h-1.5 w-1.5 animate-pulseDot bg-good" /> <span className="text-good">LIVE</span>
           </span>
           <Link href="/app" className="btn-plasma !px-4 !py-2 !text-xs">
-            Buka App
+            Launch App
           </Link>
           <button className="text-bone lg:hidden" onClick={() => setOpen((o) => !o)} aria-label="Menu" aria-expanded={open}>
             <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.5">

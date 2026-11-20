@@ -55,7 +55,7 @@ export function LiveMainnetOracle() {
       const now = Date.now() / 1000;
       const age = now - metaFeed.updatedAt;
       const deviation = Math.abs(twapUsd - metaFeed.price) / metaFeed.price;
-      const mode = oraclePaused || age > 80 * 3600 ? "Fallback (TWAP)" : age > 3600 ? "Pasar tutup" : "Pasar buka";
+      const mode = oraclePaused || age > 80 * 3600 ? "Fallback (TWAP)" : age > 3600 ? "Market closed" : "Market open";
       return { metaFeed, ethFeed, twapUsd, age, deviation, mode, oraclePaused, paused, multiplier: Number(multiplier) / 1e18 };
     },
   });
@@ -65,27 +65,27 @@ export function LiveMainnetOracle() {
   return (
     <Card
       title="Oracle Robinhood Chain mainnet (live)"
-      right={d ? <Badge tone={d.deviation > 0.03 ? "bad" : d.mode === "Pasar buka" ? "good" : "warn"}>{d.mode}</Badge> : null}
+      right={d ? <Badge tone={d.deviation > 0.03 ? "bad" : d.mode === "Market open" ? "good" : "warn"}>{d.mode}</Badge> : null}
     >
-      {q.error && <Notice tone="bad">Gagal membaca mainnet: {errMsg(q.error)}</Notice>}
+      {q.error && <Notice tone="bad">Failed to read mainnet: {errMsg(q.error)}</Notice>}
       {d ? (
         <>
           <Row label="Chainlink Robinhood META / USD">{usd(toUsd18(d.metaFeed.price), 4)}</Row>
-          <Row label="Diperbarui">{ts(d.metaFeed.updatedAt)}</Row>
-          <Row label="TWAP Uniswap V3 META/USDG (30 mnt)">{usd(toUsd18(d.twapUsd), 4)}</Row>
-          <Row label="Deviasi Chainlink vs TWAP">{(d.deviation * 100).toFixed(2)}%</Row>
+          <Row label="Updated">{ts(d.metaFeed.updatedAt)}</Row>
+          <Row label="Uniswap V3 TWAP META/USDG (30 min)">{usd(toUsd18(d.twapUsd), 4)}</Row>
+          <Row label="Chainlink vs TWAP deviation">{(d.deviation * 100).toFixed(2)}%</Row>
           <Row label="Chainlink ETH / USD">{usd(toUsd18(d.ethFeed.price), 2)}</Row>
           <Row label="META uiMultiplier">{d.multiplier.toFixed(6)}</Row>
-          <Row label="Token di-pause / oracle di-pause">
-            {d.paused ? "ya" : "tidak"} / {d.oraclePaused ? "ya" : "tidak"}
+          <Row label="Token paused / oracle paused">
+            {d.paused ? "yes" : "no"} / {d.oraclePaused ? "yes" : "no"}
           </Row>
           <p className="mt-3 text-xs text-slate-500">
-            Dibaca langsung dari kontrak resmi di Robinhood Chain (4663): META {MAINNET_ASSETS.meta}, Chainlink{" "}
+            Read directly from the official contracts on Robinhood Chain (4663): META {MAINNET_ASSETS.meta}, Chainlink{" "}
             {MAINNET_ASSETS.chainlinkMetaUsd}, pool Uniswap V3 {MAINNET_ASSETS.uniswapV3MetaUsdg}.
           </p>
         </>
       ) : (
-        !q.error && <p className="text-sm text-slate-400">Memuat…</p>
+        !q.error && <p className="text-sm text-bone-mute">Loading…</p>
       )}
     </Card>
   );

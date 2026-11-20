@@ -7,8 +7,8 @@ import { short } from "@/lib/format";
 import { Logo } from "./site/Logo";
 
 const NAV = [
-  { href: "/app", label: "Akun" },
-  { href: "/agents", label: "Agen AI" },
+  { href: "/app", label: "Account" },
+  { href: "/agents", label: "AI agents" },
   { href: "/dashboard", label: "Dashboard" },
 ];
 
@@ -17,13 +17,13 @@ export function Header() {
   const { address, isConnected } = useAccount();
   const { connect, connectors, isPending } = useConnect();
   const { disconnect } = useDisconnect();
-  const network = { local: "LOKAL · FORK TESTNET", testnet: "TESTNET · 46630", mainnet: "MAINNET · 4663" }[config.network];
+  const network = { local: "LOCAL · TESTNET FORK", testnet: "TESTNET · 46630", mainnet: "MAINNET · 4663" }[config.network];
 
   return (
     <header className="sticky top-0 z-40 border-b border-ink-line bg-ink/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl flex-wrap items-center justify-between gap-3 px-4 sm:px-6">
         <div className="flex items-center gap-8">
-          <Link href="/" aria-label="Beranda">
+          <Link href="/" aria-label="Home">
             <Logo />
           </Link>
           <nav className="flex gap-1">
@@ -48,7 +48,7 @@ export function Header() {
             <button
               onClick={() => disconnect()}
               className="btn-ghost !px-3 !py-1.5 !font-mono !text-xs !normal-case !tracking-normal"
-              title="Putuskan wallet"
+              title="Disconnect wallet"
             >
               {short(address)}
             </button>
@@ -58,7 +58,7 @@ export function Header() {
               disabled={isPending || !connectors[0]}
               className="btn-plasma !px-4 !py-2 !text-xs disabled:opacity-40"
             >
-              {isPending ? "Menghubungkan…" : "Hubungkan wallet"}
+              {isPending ? "Connecting…" : "Connect wallet"}
             </button>
           )}
         </div>

@@ -8,15 +8,15 @@ export function LiveTicker() {
     ? [
         ["META/USD · CHAINLINK", fmtUsd(data.metaUsd)],
         ["META/USD · TWAP V3 30M", fmtUsd(data.twapUsd)],
-        ["DEVIASI", `${(data.deviation * 100).toFixed(2)}%`],
+        ["DEVIATION", `${(data.deviation * 100).toFixed(2)}%`],
         ["ETH/USD", fmtUsd(data.ethUsd)],
         ["GAS PRICE", `${data.gasPriceGwei.toFixed(4)} GWEI`],
-        ["BIAYA / OP", `${data.opCostMeta.toFixed(8)} META`],
+        ["COST / OP", `${data.opCostMeta.toFixed(8)} META`],
         ["MULTIPLIER", data.multiplier.toFixed(6)],
-        ["MODE ORACLE", MODE_LABEL[data.mode]],
-        ["BLOK", `#${data.block.toLocaleString("en-US")}`],
+        ["ORACLE MODE", MODE_LABEL[data.mode]],
+        ["BLOCK", `#${data.block.toLocaleString("en-US")}`],
       ]
-    : [["ORACLE", "MENGHUBUNGKAN KE ROBINHOOD CHAIN…"]];
+    : [["ORACLE", "CONNECTING TO ROBINHOOD CHAIN…"]];
   const row = (
     <div className="flex shrink-0 items-center">
       {items.map(([k, v]) => (

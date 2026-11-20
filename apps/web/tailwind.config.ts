@@ -6,11 +6,11 @@ export default {
     extend: {
       colors: {
         // "void" background, panels and hairlines
-        ink: { DEFAULT: "#07070a", soft: "#0e0f13", line: "#1d1e24", deep: "#040405" },
-        // plasma = primary (gas / fuel), amber = secondary
-        accent: { DEFAULT: "#ff5b1f", soft: "#2a1208", glow: "#ff7a3d" },
-        amber: { DEFAULT: "#ffb020" },
-        bone: { DEFAULT: "#ece8e1", dim: "#a19d95", mute: "#6d6a64" },
+        ink: { DEFAULT: "#05070d", soft: "#0b1019", line: "#182133", deep: "#03050a" },
+        // meta blue = primary, cyan ("amber" token kept for compatibility) = secondary
+        accent: { DEFAULT: "#0866ff", soft: "#0a1a33", glow: "#3d8bff" },
+        amber: { DEFAULT: "#5cc8ff" },
+        bone: { DEFAULT: "#e7edf7", dim: "#9ba7bb", mute: "#64718a" },
         good: "#3ddc84",
         warn: "#ffb020",
         bad: "#ff4d4d",

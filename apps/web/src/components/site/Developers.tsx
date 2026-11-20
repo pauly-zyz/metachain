@@ -6,10 +6,10 @@ import { Reveal, SectionLabel } from "./Reveal";
 const EXPLORER = "https://robinhoodchain.blockscout.com/address/";
 
 const ROWS: [string, string, string][] = [
-  ["META Stock Token", MAINNET_ASSETS.meta, "18 desimal · Robinhood Assets (Jersey)"],
+  ["META Stock Token", MAINNET_ASSETS.meta, "18 decimals · Robinhood Assets (Jersey)"],
   ["Chainlink META / USD", MAINNET_ASSETS.chainlinkMetaUsd, "24/5 · multiplier-adjusted"],
-  ["Chainlink ETH / USD", MAINNET_ASSETS.chainlinkEthUsd, "8 desimal"],
-  ["Uniswap V3 META/USDG", MAINNET_ASSETS.uniswapV3MetaUsdg, "0,3% · TWAP 30 menit"],
+  ["Chainlink ETH / USD", MAINNET_ASSETS.chainlinkEthUsd, "8 decimals"],
+  ["Uniswap V3 META/USDG", MAINNET_ASSETS.uniswapV3MetaUsdg, "0.3% · 30-min TWAP"],
   ["EntryPoint v0.7", SHARED_ADDRESSES.entryPoint, "ERC-4337"],
   ["Kernel v3.1 factory", SHARED_ADDRESSES.kernelFactory, "smart account"],
   ["Smart Sessions", SHARED_ADDRESSES.smartSessions, "Rhinestone · session key"],
@@ -27,7 +27,7 @@ function CopyButton({ text }: { text: string }) {
       }}
       className="border border-ink-line px-2 py-0.5 font-mono text-[10px] tracking-wide2 text-bone-mute transition hover:border-accent hover:text-accent"
     >
-      {done ? "TERSALIN" : "SALIN"}
+      {done ? "COPIED" : "COPY"}
     </button>
   );
 }
@@ -39,11 +39,11 @@ export function Developers() {
         <Reveal>
           <SectionLabel index="05">DEVELOPER</SectionLabel>
           <h2 className="mt-5 font-display text-[clamp(2.2rem,5vw,4rem)] font-semibold uppercase leading-[0.95] text-white">
-            EVM masuk. <span className="text-accent">META</span> keluar.
+            EVM in. <span className="text-accent">META</span> out.
           </h2>
           <p className="mt-5 text-bone-dim">
-            Satu SDK TypeScript (viem + permissionless): smart account, estimasi biaya USD/META, paymaster, session key
-            agen. Kontrak Foundry dengan 72 tes unit/fuzz dan fork test terhadap mainnet.
+            One TypeScript SDK (viem + permissionless): smart accounts, USD/META fee estimates, the paymaster and agent
+            session keys. Foundry contracts with 72 unit/fuzz tests and mainnet fork tests.
           </p>
           <div className="panel mt-8 flex items-center justify-between gap-3 px-4 py-3 font-mono text-sm">
             <span>
@@ -56,7 +56,7 @@ export function Developers() {
               GitHub
             </a>
             <a href="/dashboard" className="btn-ghost">
-              Dashboard oracle
+              Oracle dashboard
             </a>
           </div>
         </Reveal>
@@ -64,7 +64,7 @@ export function Developers() {
         <Reveal delay={120}>
           <div className="panel">
             <div className="flex items-center justify-between border-b border-ink-line px-5 py-3">
-              <span className="hud">KONTRAK TERVERIFIKASI · ROBINHOOD CHAIN 4663</span>
+              <span className="hud">VERIFIED CONTRACTS · ROBINHOOD CHAIN 4663</span>
               <span className="hud text-good">ON-CHAIN ✓</span>
             </div>
             <ul>
@@ -82,7 +82,7 @@ export function Developers() {
               ))}
             </ul>
             <p className="hud border-t border-ink-line px-5 py-3 normal-case tracking-wide">
-              Hanya alamat META di atas yang merupakan Robinhood Stock Token resmi. Token lain dengan nama sama bukan.
+              Only the META address above is the official Robinhood Stock Token. Other tokens with the same name are not.
             </p>
           </div>
         </Reveal>

@@ -12,9 +12,9 @@ import { metaTokenPaymasterAbi } from "./abis.js";
 export const PriceMode = { Open: 0, Closed: 1, Fallback: 2 } as const;
 export type PriceModeValue = (typeof PriceMode)[keyof typeof PriceMode];
 export const PRICE_MODE_LABEL: Record<number, string> = {
-  0: "Pasar buka (Chainlink segar)",
-  1: "Pasar tutup (harga terakhir Chainlink + cek TWAP)",
-  2: "Fallback (TWAP Uniswap V3)",
+  0: "Market open (fresh Chainlink)",
+  1: "Market closed (last Chainlink price + TWAP check)",
+  2: "Fallback (Uniswap V3 TWAP)",
 };
 
 export const BPS = 10_000n;
@@ -138,11 +138,11 @@ export async function getPaymasterState(client: PublicClient, paymaster: Address
 
 /** Throws a descriptive error when the cached paymaster price cannot be used right now. */
 export function assertPriceUsable(state: PaymasterState, nowSec = Math.floor(Date.now() / 1000), marginSec = 30) {
-  if (state.paused) throw new Error("MetaTokenPaymaster sedang di-pause oleh admin.");
-  if (state.validUntil === 0) throw new Error("Harga paymaster belum diinisialisasi (panggil updatePrice()).");
+  if (state.paused) throw new Error("MetaTokenPaymaster is paused by the admin.");
+  if (state.validUntil === 0) throw new Error("Paymaster price not initialized (call updatePrice()).");
   if (state.validUntil <= nowSec + marginSec) {
     throw new Error(
-      `Harga paymaster kedaluwarsa pada ${new Date(state.validUntil * 1000).toISOString()} — keeper harus memanggil updatePrice().`,
+      `Paymaster price expired at ${new Date(state.validUntil * 1000).toISOString()} — a keeper must call updatePrice().`,
     );
   }
 }

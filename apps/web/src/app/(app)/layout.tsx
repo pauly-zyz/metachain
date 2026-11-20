@@ -13,8 +13,8 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         {children}
       </main>
       <footer className="mx-auto max-w-6xl border-t border-ink-line px-4 py-8 text-xs text-bone-mute sm:px-6">
-        META Chain adalah perangkat lunak eksperimental, belum diaudit. Tidak berafiliasi dengan Meta Platforms, Inc. maupun
-        Robinhood. Tidak untuk U.S. Persons.
+        META Chain is experimental, unaudited software. Not affiliated with Meta Platforms, Inc. or Robinhood. Not for U.S.
+        Persons.
       </footer>
     </div>
   );

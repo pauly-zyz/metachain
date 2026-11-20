@@ -9,7 +9,7 @@ export const meta = (v?: bigint, d = 6) => (v === undefined ? "—" : `${Number(
 export const eth = (v?: bigint, d = 6) => (v === undefined ? "—" : `${Number(formatUnits(v, 18)).toFixed(d)} ETH`);
 
 export const ts = (s?: number | bigint) =>
-  s === undefined || Number(s) === 0 ? "—" : new Date(Number(s) * 1000).toLocaleString("id-ID");
+  s === undefined || Number(s) === 0 ? "—" : new Date(Number(s) * 1000).toLocaleString("en-US");
 
 type ViemLikeError = {
   shortMessage?: string;

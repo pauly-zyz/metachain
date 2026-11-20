@@ -57,68 +57,68 @@ async function waitStatus(text, timeout = 90_000) {
 async function clickAndWait(button, okText) {
   await page.getByRole("button", { name: button }).click();
   await page.waitForFunction(
-    (t) => [...document.querySelectorAll("div")].some((d) => d.textContent?.includes(t) || d.textContent?.includes("gagal")),
+    (t) => [...document.querySelectorAll("div")].some((d) => d.textContent?.includes(t) || d.textContent?.includes("failed")),
     okText,
     { timeout: 120_000 },
   );
-  const failed = await page.getByText(/gagal:/).count();
-  if (failed) throw new Error(`${button}: ${await page.getByText(/gagal:/).first().textContent()}`);
+  const failed = await page.getByText(/failed:/).count();
+  if (failed) throw new Error(`${button}: ${await page.getByText(/failed:/).first().textContent()}`);
 }
 
 // ---------------------------------------------------------------- Account page
 await page.goto(`${BASE}/app`);
-await page.getByRole("button", { name: "Hubungkan wallet" }).first().click();
+await page.getByRole("button", { name: "Connect wallet" }).first().click();
 await waitStatus("Smart account");
-await page.waitForFunction(() => !document.body.textContent?.includes("menghitung…"), null, { timeout: 60_000 });
+await page.waitForFunction(() => !document.body.textContent?.includes("computing…"), null, { timeout: 60_000 });
 await page.screenshot({ path: `${SHOTS}/1-account-connected.png`, fullPage: true });
 
 try {
-  await clickAndWait("Faucet MockMETA (testnet)", "Faucet META testnet berhasil");
+  await clickAndWait("Faucet MockMETA (testnet)", "Testnet META faucet succeeded");
 } catch (e) {
   // MockMETA faucet has a 1-day cooldown per address; fine if the wallet already holds META from a previous run
   console.log("faucet skipped:", e.message.split("\n")[0].slice(0, 160));
 }
-await clickAndWait("Setor", "Setor META berhasil");
+await clickAndWait("Deposit", "Deposit META succeeded");
 await page.waitForTimeout(1500);
-if (await page.getByText("Akun aktif").count()) {
+if (await page.getByText("Account active").count()) {
   console.log("account already active (previous run) — skipping activation");
 } else {
-  await clickAndWait("Kirim 0.003 ETH", "Kirim 0.003 ETH untuk aktivasi berhasil");
-  await clickAndWait("Aktifkan", "Aktivasi (deploy + approve) berhasil");
+  await clickAndWait("Send 0.003 ETH", "Send 0.003 ETH for activation succeeded");
+  await clickAndWait("Activate", "Activation (deploy + approve) succeeded");
 }
-await waitStatus("Akun aktif");
+await waitStatus("Account active");
 
-await page.getByLabel("Kirim META ke").fill("0x000000000000000000000000000000000000dEaD");
-await page.getByLabel("Jumlah META").fill("0.01");
-await clickAndWait("Estimasi biaya", "Estimasi biaya berhasil");
-await waitStatus("Estimasi sebelum kirim");
-await clickAndWait("Kirim", "Kirim transaksi berhasil");
-await waitStatus("Biaya aktual");
+await page.getByLabel("Send META to").fill("0x000000000000000000000000000000000000dEaD");
+await page.getByLabel("META amount").fill("0.01");
+await clickAndWait("Estimate fee", "Fee estimate succeeded");
+await waitStatus("Estimate before sending");
+await clickAndWait("Send", "Send transaction succeeded");
+await waitStatus("Actual cost");
 await page.screenshot({ path: `${SHOTS}/2-account-paid-in-meta.png`, fullPage: true });
-const charged = await page.getByText("META ditagih").locator("..").textContent();
+const charged = await page.getByText("META charged").locator("..").textContent();
 console.log("account page:", charged);
 
 // ---------------------------------------------------------------- Agents page
-await page.getByRole("link", { name: "Agen AI" }).click();
-await waitStatus("Buat session key");
+await page.getByRole("link", { name: "AI agents" }).click();
+await waitStatus("Create session key");
 const downloadPromise = page.waitForEvent("download", { timeout: 120_000 });
-await page.getByRole("button", { name: "Buat & unduh kredensial agen" }).click();
+await page.getByRole("button", { name: "Create & download agent credentials" }).click();
 const download = await downloadPromise;
 console.log("agent credentials downloaded:", download.suggestedFilename());
-await waitStatus("Session key dibuat");
-await page.getByText("Aktif", { exact: true }).first().waitFor({ timeout: 60_000 });
+await waitStatus("Session key created");
+await page.getByText("Active", { exact: true }).first().waitFor({ timeout: 60_000 });
 await page.screenshot({ path: `${SHOTS}/3-agents-session.png`, fullPage: true });
-await page.getByRole("button", { name: "Cabut" }).click();
-await waitStatus("Session dicabut.", 120_000);
-await page.getByText("Dicabut", { exact: true }).first().waitFor({ timeout: 60_000 });
+await page.getByRole("button", { name: "Revoke" }).click();
+await waitStatus("Session revoked.", 120_000);
+await page.getByText("Revoked", { exact: true }).first().waitFor({ timeout: 60_000 });
 
 // ---------------------------------------------------------------- Dashboard
 await page.getByRole("link", { name: "Dashboard" }).click();
-await waitStatus("Total transaksi");
-await page.waitForFunction(() => document.body.textContent?.includes("Transaksi terbaru"), null, { timeout: 60_000 });
+await waitStatus("Total transactions");
+await page.waitForFunction(() => document.body.textContent?.includes("Latest transactions"), null, { timeout: 60_000 });
 await page.waitForTimeout(1500);
 await page.screenshot({ path: `${SHOTS}/4-dashboard.png`, fullPage: true });
-const totalOps = await page.getByText("Total transaksi").locator("..").textContent();
+const totalOps = await page.getByText("Total transactions").locator("..").textContent();
 console.log("dashboard:", totalOps);
 
 if (errors.length) console.log("page errors:", errors);

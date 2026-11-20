@@ -4,48 +4,48 @@ const STEPS = [
   {
     n: "01",
     t: "Smart account",
-    d: "Wallet Anda memiliki smart account Kernel v3.1 (ERC-4337). Sekali aktivasi, izinkan paymaster menarik META.",
+    d: "Your wallet owns a Kernel v3.1 smart account (ERC-4337). Activate once and allow the paymaster to pull META.",
     k: ["KERNEL v3.1", "ERC-7579"],
   },
   {
     n: "02",
     t: "UserOperation",
-    d: "Transaksi dikirim ke bundler dengan paymasterAndData → MetaTokenPaymaster dan plafon META yang Anda tandatangani.",
+    d: "Transactions go to a bundler with paymasterAndData → MetaTokenPaymaster and a META ceiling you sign yourself.",
     k: ["ENTRYPOINT v0.7", "BUNDLER"],
   },
   {
     n: "03",
-    t: "Pre-charge META",
-    d: "Paymaster mengonversi biaya gas terburuk ETH → USD → META dengan harga oracle ter-cache, lalu menarik META.",
+    t: "META pre-charge",
+    d: "The paymaster converts the worst-case gas cost ETH → USD → META at the cached oracle price and pulls META.",
     k: ["CHAINLINK", "TWAP V3"],
   },
   {
     n: "04",
-    t: "Refund otomatis",
-    d: "Setelah eksekusi, biaya aktual dihitung ulang dan selisihnya dikembalikan ke akun Anda di postOp.",
+    t: "Automatic refund",
+    d: "After execution the actual cost is recomputed and the difference is refunded to your account in postOp.",
     k: ["POSTOP", "USD-PEGGED"],
   },
 ];
 
 export function HowItWorks() {
   return (
-    <section id="cara-kerja" className="relative border-b border-ink-line py-28">
+    <section id="how-it-works" className="relative border-b border-ink-line py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <Reveal>
-          <SectionLabel index="01">CARA KERJA</SectionLabel>
+          <SectionLabel index="01">HOW IT WORKS</SectionLabel>
           <h2 className="mt-5 max-w-3xl font-display text-[clamp(2.2rem,5vw,4rem)] font-semibold uppercase leading-[0.95] text-white">
-            Empat langkah. <span className="text-accent">Nol ETH</span> untuk gas.
+            Four steps. <span className="text-accent">Zero ETH</span> for gas.
           </h2>
           <p className="mt-5 max-w-2xl text-bone-dim">
-            Gas tetap dibayar ke jaringan dalam ETH — oleh paymaster. Anda cukup memegang META. Semua aturan ditegakkan
-            on-chain oleh EntryPoint resmi ERC-4337.
+            The network is still paid in ETH — by the paymaster. You only hold META. Every rule is enforced on-chain by the
+            canonical ERC-4337 EntryPoint.
           </p>
         </Reveal>
 
         <div className="relative mt-16 grid gap-px bg-ink-line md:grid-cols-4">
           {/* animated flow line */}
           <svg className="pointer-events-none absolute -top-6 left-0 hidden h-3 w-full md:block" preserveAspectRatio="none" viewBox="0 0 100 3">
-            <line x1="0" y1="1.5" x2="100" y2="1.5" stroke="#ff5b1f" strokeOpacity="0.6" strokeWidth="0.4" strokeDasharray="2 2" className="animate-flow" />
+            <line x1="0" y1="1.5" x2="100" y2="1.5" stroke="#0866ff" strokeOpacity="0.6" strokeWidth="0.4" strokeDasharray="2 2" className="animate-flow" />
           </svg>
           {STEPS.map((s, i) => (
             <Reveal key={s.n} delay={i * 120} className="h-full">

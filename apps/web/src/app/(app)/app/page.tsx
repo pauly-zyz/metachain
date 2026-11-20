@@ -60,17 +60,17 @@ export default function AccountPage() {
     setStatus({ tone: "neutral", msg: `${label}…` });
     try {
       const hash = await fn();
-      setStatus({ tone: "good", msg: `${label} berhasil`, hash });
+      setStatus({ tone: "good", msg: `${label} succeeded`, hash });
       await readiness.refetch();
     } catch (e) {
-      setStatus({ tone: "bad", msg: `${label} gagal: ${errMsg(e)}` });
+      setStatus({ tone: "bad", msg: `${label} failed: ${errMsg(e)}` });
     } finally {
       setBusy(false);
     }
   }
 
   const sampleCalls = () => {
-    if (!isAddress(recipient)) throw new Error("Alamat penerima tidak valid");
+    if (!isAddress(recipient)) throw new Error("Invalid recipient address");
     return [
       {
         to: a!.meta,
@@ -93,37 +93,37 @@ export default function AccountPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-4xl font-semibold uppercase leading-none text-white sm:text-5xl">Bayar gas dengan META</h1>
+        <h1 className="font-display text-4xl font-semibold uppercase leading-none text-white sm:text-5xl">Pay gas with META</h1>
         <p className="mt-1 text-sm text-bone-mute">
-          Smart account (Kernel v3.1, ERC-4337) yang membayar biaya transaksi Robinhood Chain dalam META Stock Token. Biaya
-          dipatok dalam USD; jumlah META menyesuaikan harga oracle.
+          A Kernel v3.1 (ERC-4337) smart account that pays Robinhood Chain transaction fees in META Stock Token. Fees are
+          pegged in USD; the META amount follows the oracle price.
         </p>
       </div>
 
       {!eoa && <AppIntro />}
-      {accountError && <Notice tone="bad">Gagal menurunkan smart account: {errMsg(accountError)}</Notice>}
+      {accountError && <Notice tone="bad">Failed to derive smart account: {errMsg(accountError)}</Notice>}
 
       {eoa && a && (
         <div className="grid gap-6 md:grid-cols-2">
-          <Card title="1 · Smart account" right={r?.ready ? <Badge tone="good">Siap</Badge> : <Badge tone="warn">Belum siap</Badge>}>
-            <Row label="Pemilik (EOA)">{short(eoa)}</Row>
-            <Row label="Smart account">{account ? account.address : "menghitung…"}</Row>
-            <Row label="Ter-deploy">{r ? (r.deployed ? "ya" : "belum") : "—"}</Row>
-            <Row label="Saldo META">{meta(r?.balance)}</Row>
-            <Row label="Allowance ke paymaster">{r ? (r.allowance > 0n ? "ada" : "belum") : "—"}</Row>
-            <Row label="Saldo ETH akun">{eth(accountEth.data)}</Row>
+          <Card title="1 · Smart account" right={r?.ready ? <Badge tone="good">Ready</Badge> : <Badge tone="warn">Not ready</Badge>}>
+            <Row label="Owner (EOA)">{short(eoa)}</Row>
+            <Row label="Smart account">{account ? account.address : "computing…"}</Row>
+            <Row label="Deployed">{r ? (r.deployed ? "yes" : "not yet") : "—"}</Row>
+            <Row label="META balance">{meta(r?.balance)}</Row>
+            <Row label="Paymaster allowance">{r ? (r.allowance > 0n ? "granted" : "not yet") : "—"}</Row>
+            <Row label="Account ETH balance">{eth(accountEth.data)}</Row>
           </Card>
 
-          <Card title="2 · Aktivasi">
+          <Card title="2 · Activation">
             <div className="space-y-3 text-sm">
-              <Row label="ETH di wallet">{eth(eoaBalances.data?.eth)}</Row>
-              <Row label="META di wallet">{meta(eoaBalances.data?.meta)}</Row>
+              <Row label="ETH in wallet">{eth(eoaBalances.data?.eth)}</Row>
+              <Row label="META in wallet">{meta(eoaBalances.data?.meta)}</Row>
               {config.isMock && (
                 <Button
                   variant="secondary"
                   disabled={busy}
                   onClick={() =>
-                    run("Faucet META testnet", async () => {
+                    run("Testnet META faucet", async () => {
                       // simulate first so custom errors (e.g. FaucetCooldown) are decoded instead of a generic wallet error
                       const { request } = await client.simulateContract({ address: a.meta, abi: mockMetaAbi, functionName: "faucet", account: eoa });
                       return walletClient!.writeContract({ ...request, chain: config.chain });
@@ -135,12 +135,12 @@ export default function AccountPage() {
               )}
               <div className="flex items-end gap-2">
                 <div className="flex-1">
-                  <Field label="Setor META ke smart account" value={deposit} onChange={setDeposit} />
+                  <Field label="Deposit META to smart account" value={deposit} onChange={setDeposit} />
                 </div>
                 <Button
                   disabled={busy || !account}
                   onClick={() =>
-                    run("Setor META", async () => {
+                    run("Deposit META", async () => {
                       const { request } = await client.simulateContract({
                         address: a.meta,
                         abi: erc20Abi,
@@ -152,22 +152,22 @@ export default function AccountPage() {
                     })
                   }
                 >
-                  Setor
+                  Deposit
                 </Button>
               </div>
               {!r?.deployed || (r && r.allowance === 0n) ? (
                 <>
                   <p className="text-xs text-bone-mute">
-                    Operasi pertama (deploy akun + izin META ke paymaster) dibayar sekali dengan ETH, karena paymaster menarik
-                    META sebelum izin di operasi yang sama dieksekusi. Biaya nyatanya hanya beberapa sen; 0.003 ETH dibutuhkan
-                    agar simulasi bundler lolos, dan sisanya tetap menjadi milik smart account Anda.
+                    The first operation (deploy account + allow the paymaster to pull META) is paid once in ETH, because the
+                    paymaster pulls META before an approval in the same operation executes. It really costs a few cents; 0.003
+                    ETH is needed for the bundler simulation to pass, and the rest stays in your smart account.
                   </p>
                   <div className="flex flex-wrap gap-2">
                     <Button
                       variant="secondary"
                       disabled={busy || !account}
                       onClick={() =>
-                        run("Kirim 0.003 ETH untuk aktivasi", async () =>
+                        run("Send 0.003 ETH for activation", async () =>
                           walletClient!.sendTransaction({
                             to: account!.address,
                             value: parseEther("0.003"),
@@ -177,26 +177,26 @@ export default function AccountPage() {
                         )
                       }
                     >
-                      Kirim 0.003 ETH
+                      Send 0.003 ETH
                     </Button>
                     <Button
                       disabled={busy || !account}
                       onClick={() =>
-                        run("Aktivasi (deploy + approve)", async () => {
+                        run("Activation (deploy + approve)", async () => {
                           const boot = createBootstrapClient({ account: account!, chain: config.chain, client, bundlerUrl: config.bundlerUrl });
                           const hash = await boot.sendUserOperation({ calls: [approveMetaCall(a)] });
                           const rec = await boot.waitForUserOperationReceipt({ hash });
-                          if (!rec.success) throw new Error("UserOperation gagal");
+                          if (!rec.success) throw new Error("UserOperation failed");
                           return rec.receipt.transactionHash;
                         })
                       }
                     >
-                      Aktifkan
+                      Activate
                     </Button>
                   </div>
                 </>
               ) : (
-                <Notice tone="good">Akun aktif — semua transaksi berikutnya membayar gas dengan META.</Notice>
+                <Notice tone="good">Account active — every following transaction pays gas in META.</Notice>
               )}
             </div>
           </Card>
@@ -205,25 +205,25 @@ export default function AccountPage() {
 
       {eoa && a && (
         <Card
-          title="3 · Transaksi contoh (gas dibayar META)"
+          title="3 · Sample transaction (gas paid in META)"
           right={
             pm.data ? (
               <Badge tone={priceOk ? (pm.data.mode === 0 ? "good" : "warn") : "bad"}>
-                {priceOk ? PRICE_MODE_LABEL[pm.data.mode] : "Harga paymaster kedaluwarsa"}
+                {priceOk ? PRICE_MODE_LABEL[pm.data.mode] : "Paymaster price expired"}
               </Badge>
             ) : null
           }
         >
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-3">
-              <Field label="Kirim META ke" value={recipient} onChange={setRecipient} hint="Alamat penerima (0x…)" />
-              <Field label="Jumlah META" value={amount} onChange={setAmount} />
+              <Field label="Send META to" value={recipient} onChange={setRecipient} hint="Recipient address (0x…)" />
+              <Field label="META amount" value={amount} onChange={setAmount} />
               <div className="flex gap-2">
                 <Button
                   variant="secondary"
                   disabled={busy || !r?.ready}
                   onClick={() =>
-                    run("Estimasi biaya", async () => {
+                    run("Fee estimate", async () => {
                       const op = await metaClient().prepareUserOperation({ calls: sampleCalls() });
                       setEstimate(
                         await estimateMetaFee({
@@ -243,48 +243,48 @@ export default function AccountPage() {
                     })
                   }
                 >
-                  Estimasi biaya
+                  Estimate fee
                 </Button>
                 <Button
                   disabled={busy || !r?.ready}
                   onClick={() =>
-                    run("Kirim transaksi", async () => {
+                    run("Send transaction", async () => {
                       const c = metaClient();
                       const hash = await c.sendUserOperation({ calls: sampleCalls() });
                       const rec = await c.waitForUserOperationReceipt({ hash });
                       setPaid(parseMetaGasPaid(rec.logs, a.paymaster) ?? null);
-                      if (!rec.success) throw new Error("Panggilan di dalam UserOperation revert (gas tetap dibayar META)");
+                      if (!rec.success) throw new Error("The call inside the UserOperation reverted (gas was still paid in META)");
                       return rec.receipt.transactionHash;
                     })
                   }
                 >
-                  Kirim
+                  Send
                 </Button>
               </div>
             </div>
             <div>
               {estimate && (
                 <div className="border border-ink-line bg-ink p-3">
-                  <div className="hud mb-2">Estimasi sebelum kirim</div>
-                  <Row label="Maks. (pre-charge)">
+                  <div className="hud mb-2">Estimate before sending</div>
+                  <Row label="Max (pre-charge)">
                     {meta(estimate.maxMeta, 8)} ≈ {usd(estimate.maxUsd)}
                   </Row>
-                  <Row label="Harga META/USD">{usd(estimate.metaUsd, 2)}</Row>
-                  <Row label="Harga ETH/USD">{usd(estimate.ethUsd, 2)}</Row>
+                  <Row label="META/USD price">{usd(estimate.metaUsd, 2)}</Row>
+                  <Row label="ETH/USD price">{usd(estimate.ethUsd, 2)}</Row>
                   <Row label="Markup">{Number(estimate.markupBps) / 100}%</Row>
-                  <Row label="Mode harga">{estimate.modeLabel}</Row>
-                  <Row label="Harga berlaku s/d">{ts(estimate.priceValidUntil)}</Row>
+                  <Row label="Price mode">{estimate.modeLabel}</Row>
+                  <Row label="Price valid until">{ts(estimate.priceValidUntil)}</Row>
                   <p className="mt-2 text-xs text-bone-mute">
-                    Pre-charge ditarik di awal; selisih dikembalikan otomatis di postOp.
+                    The pre-charge is pulled up front; the difference is refunded automatically in postOp.
                   </p>
                 </div>
               )}
               {paid && (
                 <div className="mt-3 border border-good/40 bg-good/5 p-3">
-                  <div className="hud mb-2 text-good">Biaya aktual</div>
-                  <Row label="META ditagih">{meta(paid.metaCharged, 8)}</Row>
-                  <Row label="Setara USD">{usd(paid.usdCharged)}</Row>
-                  <Row label="Biaya gas (ETH)">{eth(paid.gasCostWei, 9)}</Row>
+                  <div className="hud mb-2 text-good">Actual cost</div>
+                  <Row label="META charged">{meta(paid.metaCharged, 8)}</Row>
+                  <Row label="USD equivalent">{usd(paid.usdCharged)}</Row>
+                  <Row label="Gas cost (ETH)">{eth(paid.gasCostWei, 9)}</Row>
                 </div>
               )}
             </div>

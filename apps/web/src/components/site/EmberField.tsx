@@ -64,11 +64,12 @@ export function EmberField({ className = "" }: { className?: string }) {
           v += 0.05 * (0.5 + 0.5 * Math.sin(i * 0.35 + t * 0.0006) * Math.cos(j * 0.31 - t * 0.0005));
           if (v < 0.035) continue;
           const a = Math.min(1, v);
-          // hotter = more amber/white, cooler = plasma
+          
           const hot = Math.min(1, Math.max(0, (v - 0.55) * 2.2));
-          const r = 255;
-          const g = Math.round(91 + hot * 120);
-          const b = Math.round(31 + hot * 90);
+          // cool = Meta blue, hot = cyan/white core (a blue gas flame)
+          const r = Math.round(8 + hot * 140);
+          const g = Math.round(102 + hot * 128);
+          const b = 255;
           ctx.fillStyle = `rgba(${r},${g},${b},${a * 0.85})`;
           const s = a > 0.6 ? CELL - 3 : a > 0.25 ? CELL - 5 : CELL - 8;
           ctx.fillRect(x + (CELL - s) / 2, y + (CELL - s) / 2, s, s);
@@ -77,7 +78,7 @@ export function EmberField({ className = "" }: { className?: string }) {
       // embers
       for (const e of embers) {
         const a = Math.max(0, e.life) * (0.5 + 0.5 * Math.sin(t * 0.01 + e.x));
-        ctx.fillStyle = `rgba(255,${150 + Math.round(a * 80)},60,${a})`;
+        ctx.fillStyle = `rgba(${90 + Math.round(a * 100)},${190 + Math.round(a * 50)},255,${a})`;
         ctx.fillRect(e.x, e.y, e.size, e.size);
       }
     };

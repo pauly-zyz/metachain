@@ -4,36 +4,36 @@ import { Reveal, SectionLabel } from "./Reveal";
 
 const QA: [string, string][] = [
   [
-    "Apa itu META Chain?",
-    "Lapisan pembayaran gas di Robinhood Chain (Arbitrum L2). Smart account ERC-4337 membayar biaya transaksi dengan META Stock Token lewat paymaster; paymaster membayar ETH ke jaringan. Bukan chain atau L3 baru.",
+    "What is META Chain?",
+    "A gas payment layer on Robinhood Chain (an Arbitrum L2). ERC-4337 smart accounts pay transaction fees in META Stock Token through a paymaster, which pays the network in ETH. It is not a new chain or L3.",
   ],
   [
-    "Apakah META Chain berafiliasi dengan Meta Platforms atau Robinhood?",
-    "Tidak. META Chain adalah proyek independen dan tidak berafiliasi, didukung, maupun disponsori oleh Meta Platforms, Inc. atau Robinhood (Robinhood Markets, Inc. / Robinhood Assets (Jersey) Limited).",
+    "Is META Chain affiliated with Meta Platforms or Robinhood?",
+    "No. META Chain is an independent project and is not affiliated with, endorsed by or sponsored by Meta Platforms, Inc. or Robinhood (Robinhood Markets, Inc. / Robinhood Assets (Jersey) Limited).",
   ],
   [
-    "Siapa yang boleh memakai META Stock Token?",
-    "META Stock Token adalah sekuritas utang ter-tokenisasi yang tidak tersedia untuk warga/penduduk AS (U.S. Persons) dan dibatasi di beberapa yurisdiksi lain (antara lain Kanada, Inggris, Swiss). Pastikan Anda memenuhi syarat di yurisdiksi Anda.",
+    "Who can use META Stock Tokens?",
+    "META Stock Tokens are tokenized debt securities that are not available to U.S. Persons and are restricted in other jurisdictions (including Canada, the UK and Switzerland). Make sure you are eligible where you live.",
   ],
   [
-    "Berapa biaya satu transaksi?",
-    "Biaya dipatok USD: gas aktual × harga ETH, ditambah markup 5% (pasar buka). Di Robinhood Chain biasanya hanya pecahan sen — fork test mainnet ≈ $0,008 per operasi. Jumlah META menyesuaikan harga saham.",
+    "How much does a transaction cost?",
+    "Fees are pegged in USD: actual gas × ETH price, plus a 5% markup when the market is open. On Robinhood Chain that is usually a fraction of a cent — about $0.008 per operation in our mainnet fork test. The META amount follows the stock price.",
   ],
   [
-    "Apa yang terjadi saat pasar saham tutup?",
-    "Feed Chainlink META bergerak 24/5. Saat weekend/libur, harga terakhir tetap dipakai sampai 80 jam dengan markup lebih tinggi, batas per transaksi lebih kecil, dan pemeriksaan TWAP Uniswap V3 wajib. Di luar itu sistem pindah ke fallback TWAP atau berhenti dengan aman.",
+    "What happens when the stock market is closed?",
+    "The Chainlink META feed updates 24/5. On weekends and holidays the last price stays valid for up to 80 hours with a higher markup, a lower per-transaction cap and a mandatory Uniswap V3 TWAP check. Beyond that the system switches to a TWAP fallback or halts safely.",
   ],
   [
-    "Bagaimana harga dilindungi dari manipulasi?",
-    "Chainlink adalah sumber utama; TWAP Uniswap V3 30 menit menjadi pemeriksa silang. Bila selisihnya melebihi 3% (pasar buka) atau 8% (pasar tutup), circuit breaker menolak harga. Batas USD per transaksi dan per akun membatasi eksposur.",
+    "How is the price protected from manipulation?",
+    "Chainlink is the primary source; a 30-minute Uniswap V3 TWAP is the cross-check. If they diverge by more than 3% (market open) or 8% (market closed), the circuit breaker rejects the price. USD caps per transaction and per account limit exposure.",
   ],
   [
-    "Apakah saya butuh ETH?",
-    "Hanya sekali untuk aktivasi akun (deploy + izin META ke paymaster), karena paymaster menarik META sebelum izin di operasi yang sama berlaku. Sesudahnya semua gas dibayar META.",
+    "Do I need ETH?",
+    "Only once, to activate the account (deploy + allow the paymaster to pull META), because the paymaster pulls META before an approval in the same operation takes effect. After that, all gas is paid in META.",
   ],
   [
-    "Apakah kontraknya sudah diaudit dan mainnet sudah aktif?",
-    "Belum. Kode bersumber terbuka, diuji (unit, fuzz, fork test mainnet, e2e) dan dianalisis Slither, tetapi belum diaudit eksternal. Oracle mainnet di halaman ini live; kontrak paymaster mainnet menunggu audit dan persetujuan pemilik proyek.",
+    "Are the contracts audited and is mainnet live?",
+    "Not yet. The code is open source, tested (unit, fuzz, mainnet fork, end-to-end) and analysed with Slither, but not externally audited. The mainnet oracle on this site is live; the mainnet paymaster awaits an audit and the project owner's approval.",
   ],
 ];
 
@@ -45,9 +45,9 @@ export function Faq() {
         <Reveal>
           <SectionLabel index="06">FAQ</SectionLabel>
           <h2 className="mt-5 font-display text-[clamp(2.2rem,5vw,4rem)] font-semibold uppercase leading-[0.95] text-white">
-            Delapan pertanyaan. <span className="text-accent">Jawaban jelas.</span>
+            Eight questions. <span className="text-accent">Clear answers.</span>
           </h2>
-          <p className="mt-5 max-w-sm text-bone-dim">Detail teknis lengkap ada di README dan riset kelayakan di GitHub.</p>
+          <p className="mt-5 max-w-sm text-bone-dim">Full technical detail lives in the README and feasibility study on GitHub.</p>
         </Reveal>
         <Reveal delay={100}>
           <ul className="border-t border-ink-line">

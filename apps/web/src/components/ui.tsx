@@ -102,7 +102,7 @@ export function Field({
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-1.5 w-full border border-ink-line bg-ink-deep px-3 py-2.5 font-mono text-bone outline-none transition focus:border-accent focus:shadow-[0_0_0_3px_rgba(255,91,31,0.12)]"
+        className="mt-1.5 w-full border border-ink-line bg-ink-deep px-3 py-2.5 font-mono text-bone outline-none transition focus:border-accent focus:shadow-[0_0_0_3px_rgba(8,102,255,0.12)]"
       />
       {hint && <span className="mt-1 block text-xs text-bone-mute">{hint}</span>}
     </label>

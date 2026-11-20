@@ -22,4 +22,4 @@ export {
 } from "./abis.js";
 
 export const DISCLAIMER =
-  "META Chain tidak berafiliasi dengan Meta Platforms, Inc. maupun Robinhood. META Stock Token tidak tersedia untuk warga/penduduk AS dan dibatasi di beberapa yurisdiksi lain.";
+  "META Chain is not affiliated with Meta Platforms, Inc. or Robinhood. META Stock Tokens are not available to U.S. Persons and are restricted in other jurisdictions.";

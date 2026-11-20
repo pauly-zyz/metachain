@@ -1,20 +1,20 @@
 import { Reveal, SectionLabel } from "./Reveal";
 
 const FEATURES = [
-  { t: "Session key berbatas", d: "Agen hanya memegang kunci session — tidak pernah kunci pemilik. Hanya boleh memanggil AgentPayments.pay." },
-  { t: "Batas per periode", d: "Maks. META, maks. USD (dinilai oracle) dan maks. jumlah transaksi per jam/hari — ditegakkan on-chain." },
-  { t: "Receipt inferensi", d: "Setiap pembayaran mencatat payer, payee, jumlah, nilai USD dan memoHash — bukti on-chain untuk job AI." },
-  { t: "Masa berlaku & cabut", d: "TimeFrame + UsageLimit policy. Pemilik bisa mencabut session kapan saja dalam satu transaksi." },
-  { t: "Gas juga META", d: "UserOperation agen dibayar lewat paymaster yang sama — agen tidak perlu ETH sama sekali." },
-  { t: "Modul teraudit", d: "Rhinestone Smart Sessions + Kernel v3.1 yang sudah ter-deploy di Robinhood Chain, bukan logika buatan sendiri." },
+  { t: "Bounded session keys", d: "The agent holds only a session key — never the owner key. It may only call AgentPayments.pay." },
+  { t: "Per-period limits", d: "Max META, max USD (oracle-valued) and max number of payments per hour/day — enforced on-chain." },
+  { t: "Inference receipts", d: "Every payment records payer, payee, amount, USD value and memoHash — on-chain proof for AI jobs." },
+  { t: "Expiry & revoke", d: "TimeFrame + UsageLimit policies. The owner can revoke a session at any time in a single transaction." },
+  { t: "Gas in META too", d: "Agent UserOperations go through the same paymaster — agents never need ETH." },
+  { t: "Audited modules", d: "Rhinestone Smart Sessions + Kernel v3.1 already deployed on Robinhood Chain — no home-grown key logic." },
 ];
 
 const CODE = `import { createAgentClient } from "@metachain/sdk";
 
 const agent = await createAgentClient({
   client, chain, bundlerUrl,
-  accountAddress,          // smart account pemilik
-  sessionKey,              // kunci terbatas milik agen
+  accountAddress,          // owner smart account
+  sessionKey,              // agent-held bounded key
   permissionId, addresses,
 });
 
@@ -63,16 +63,16 @@ function highlight(code: string) {
 
 export function Agents() {
   return (
-    <section id="agen" className="relative border-b border-ink-line py-28">
+    <section id="agents" className="relative border-b border-ink-line py-28">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-14 px-4 sm:px-6 lg:grid-cols-2 [&>*]:min-w-0">
         <div>
           <Reveal>
-            <SectionLabel index="03">AGEN AI</SectionLabel>
+            <SectionLabel index="03">AI AGENTS</SectionLabel>
             <h2 className="mt-5 font-display text-[clamp(2.2rem,5vw,4rem)] font-semibold uppercase leading-[0.95] text-white">
-              Mesin yang <span className="text-accent">saling membayar.</span>
+              Machines that <span className="text-accent">pay each other.</span>
             </h2>
             <p className="mt-5 max-w-xl text-bone-dim">
-              Beri agen AI dompet yang bisa membayar agen lain secara otonom — dengan batas yang tidak bisa ia langgar.
+              Give an AI agent a wallet that pays other agents autonomously — with limits it cannot break.
             </p>
           </Reveal>
           <div className="mt-10 grid gap-px bg-ink-line sm:grid-cols-2">
@@ -103,9 +103,9 @@ export function Agents() {
             <pre className="overflow-x-auto p-5 font-mono text-[12.5px] leading-6 text-bone">{highlight(CODE)}</pre>
             <div className="grid grid-cols-3 divide-x divide-ink-line border-t border-ink-line">
               {[
-                ["0,02 META", "maks / jam"],
+                ["0.02 META", "max / hour"],
                 ["10 tx", "rate limit"],
-                ["24 jam", "masa berlaku"],
+                ["24 h", "expiry"],
               ].map(([v, k]) => (
                 <div key={k} className="px-4 py-3">
                   <div className="font-mono text-sm text-accent">{v}</div>

@@ -72,58 +72,58 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-4xl font-semibold uppercase leading-none text-white sm:text-5xl">Dashboard publik</h1>
-        <p className="mt-1 text-sm text-bone-mute">Statistik paymaster dan harga oracle langsung dari kontrak (tanpa wallet).</p>
+        <h1 className="font-display text-4xl font-semibold uppercase leading-none text-white sm:text-5xl">Public dashboard</h1>
+        <p className="mt-1 text-sm text-bone-mute">Paymaster statistics and oracle prices read straight from the contracts (no wallet needed).</p>
       </div>
-      {data.error && <Notice tone="bad">Gagal membaca kontrak: {errMsg(data.error)}</Notice>}
+      {data.error && <Notice tone="bad">Failed to read contracts: {errMsg(data.error)}</Notice>}
       {config.network === "mainnet" && <LiveMainnetOracle />}
 
       {d && (
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Stat label="Total transaksi" value={d.stats[0].toString()} />
-            <Stat label="META terkumpul" value={meta(d.stats[1], 6)} />
-            <Stat label="Nilai USD ditagih" value={usd(d.stats[3], 4)} />
-            <Stat label="Deposit ETH di EntryPoint" value={eth(d.deposit, 5)} hint={d.paused ? "Paymaster DI-PAUSE" : "aktif"} />
+            <Stat label="Total transactions" value={d.stats[0].toString()} />
+            <Stat label="META collected" value={meta(d.stats[1], 6)} />
+            <Stat label="USD value charged" value={usd(d.stats[3], 4)} />
+            <Stat label="ETH deposit in EntryPoint" value={eth(d.deposit, 5)} hint={d.paused ? "Paymaster PAUSED" : "active"} />
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
             <Card
-              title="Harga yang dipakai paymaster (cache)"
-              right={<Badge tone={cacheValid ? "good" : "bad"}>{cacheValid ? "berlaku" : "kedaluwarsa"}</Badge>}
+              title="Price used by the paymaster (cache)"
+              right={<Badge tone={cacheValid ? "good" : "bad"}>{cacheValid ? "valid" : "expired"}</Badge>}
             >
               <Row label="META/USD">{usd(d.cache[0], 4)}</Row>
               <Row label="ETH/USD">{usd(d.cache[1], 2)}</Row>
-              <Row label="Sumber / mode">{PRICE_MODE_LABEL[d.cache[4]]}</Row>
-              <Row label="Diperbarui">{ts(d.cache[3])}</Row>
-              <Row label="Berlaku s/d">{ts(d.cache[2])}</Row>
+              <Row label="Source / mode">{PRICE_MODE_LABEL[d.cache[4]]}</Row>
+              <Row label="Updated">{ts(d.cache[3])}</Row>
+              <Row label="Valid until">{ts(d.cache[2])}</Row>
             </Card>
 
-            <Card title="Oracle hibrida (saat ini)">
+            <Card title="Hybrid oracle (now)">
               <Row label={d.chainlink?.description ?? "Chainlink META/USD"}>{d.chainlink ? usd(d.chainlink.answer, 4) : "—"}</Row>
-              <Row label="Chainlink diperbarui">{d.chainlink ? ts(d.chainlink.updatedAt) : "—"}</Row>
-              <Row label="TWAP Uniswap V3 (30 mnt)">{d.twap[0] ? usd(d.twap[1], 4) : "tidak tersedia"}</Row>
-              <Row label="Deviasi Chainlink vs TWAP">{deviationBps === null ? "—" : `${(deviationBps / 100).toFixed(2)}%`}</Row>
-              <Row label="Keputusan oracle">
+              <Row label="Chainlink updated">{d.chainlink ? ts(d.chainlink.updatedAt) : "—"}</Row>
+              <Row label="Uniswap V3 TWAP (30 min)">{d.twap[0] ? usd(d.twap[1], 4) : "unavailable"}</Row>
+              <Row label="Chainlink vs TWAP deviation">{deviationBps === null ? "—" : `${(deviationBps / 100).toFixed(2)}%`}</Row>
+              <Row label="Oracle decision">
                 {d.live ? (
                   <span>
                     {PRICE_MODE_LABEL[d.live.mode]} · {usd(d.live.metaUsd, 4)}
                   </span>
                 ) : (
-                  <span className="text-bad">Circuit breaker / tidak ada harga aman</span>
+                  <span className="text-bad">Circuit breaker / no safe price</span>
                 )}
               </Row>
               {d.liveError && <p className="mt-2 text-xs text-bad break-words">{d.liveError}</p>}
             </Card>
           </div>
 
-          <Card title="Transaksi terbaru (gas dibayar META)">
+          <Card title="Latest transactions (gas paid in META)">
             {d.recent.length ? (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="text-left font-mono text-[10px] uppercase tracking-wide2 text-bone-mute">
                     <tr>
-                      <th className="py-2">Akun</th>
+                      <th className="py-2">Account</th>
                       <th>META</th>
                       <th>USD</th>
                       <th>Mode</th>
@@ -146,11 +146,11 @@ export default function DashboardPage() {
                 </table>
               </div>
             ) : (
-              <p className="text-sm text-bone-mute">Belum ada transaksi.</p>
+              <p className="text-sm text-bone-mute">No transactions yet.</p>
             )}
           </Card>
 
-          <Card title="Kontrak">
+          <Card title="Contracts">
             <Row label="MetaTokenPaymaster">{a!.paymaster}</Row>
             <Row label="MetaPriceOracle">{a!.oracle}</Row>
             <Row label="AgentPayments">{a!.agentPayments}</Row>

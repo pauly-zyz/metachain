@@ -16,7 +16,7 @@ export function Hero() {
       <div className="absolute inset-x-0 bottom-0 -z-10 h-[85%] opacity-90">
         <EmberField />
       </div>
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,#07070a_0%,transparent_35%,transparent_80%,#07070a_100%)]" />
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,#05070d_0%,transparent_35%,transparent_80%,#05070d_100%)]" />
 
       <div className="relative mx-auto grid min-h-[calc(100vh-64px)] max-w-7xl grid-cols-1 items-center gap-12 px-4 pb-12 pt-12 sm:px-6 md:pb-28 lg:grid-cols-[1.05fr_1fr] lg:pt-10 [&>*]:min-w-0">
         <div className="animate-rise">
@@ -31,19 +31,19 @@ export function Hero() {
             is <span className="text-accent text-glow">fuel.</span>
           </h1>
           <p className="mt-7 max-w-xl text-lg leading-relaxed text-bone-dim">
-            <span className="text-white">Bayar gas dengan saham ter-tokenisasi.</span> Setiap transaksi di Robinhood Chain
-            dibayar dengan META Stock Token — dipatok dalam USD, dihargai oracle Chainlink dan diamankan circuit breaker
-            TWAP. Untuk manusia dan agen AI.
+            <span className="text-white">Pay gas with a tokenized stock.</span> Every transaction on Robinhood Chain is paid
+            in META Stock Token — pegged in USD, priced by Chainlink and guarded by a TWAP circuit breaker. Built for humans
+            and AI agents.
           </p>
           <div className="mt-10 flex flex-wrap gap-5">
             <Link href="/app" className="btn-plasma">
-              Buka App
+              Launch App
               <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6">
                 <path d="M2 8h11M9 4l4 4-4 4" />
               </svg>
             </Link>
-            <a href="#cara-kerja" className="btn-ghost">
-              Lihat cara kerja
+            <a href="#how-it-works" className="btn-ghost">
+              How it works
             </a>
           </div>
         </div>
@@ -62,7 +62,7 @@ export function Hero() {
             </div>
             <FuelGauge />
             <div className="mt-2 flex items-center justify-between">
-              <span className="hud">BLOK #{data ? data.block.toLocaleString("en-US") : "—"}</span>
+              <span className="hud">BLOCK #{data ? data.block.toLocaleString("en-US") : "—"}</span>
               <span className="hud">ETH {data ? fmtUsd(data.ethUsd) : "—"}</span>
             </div>
           </div>
@@ -74,9 +74,9 @@ export function Hero() {
         <div className="mx-auto grid max-w-7xl grid-cols-2 divide-ink-line px-4 sm:px-6 md:grid-cols-4 md:divide-x">
           {[
             ["Gas token", "META", "stock token"],
-            ["Dipatok", "USD", "bukan ETH"],
-            ["Biaya / transaksi", data ? fmtUsd(data.opCostUsd, 4) : "—", "estimasi live"],
-            ["Settle ke", "ROBINHOOD CHAIN", "L2 → Ethereum"],
+            ["Pegged to", "USD", "not ETH"],
+            ["Cost / transaction", data ? fmtUsd(data.opCostUsd, 4) : "—", "live estimate"],
+            ["Settles on", "ROBINHOOD CHAIN", "L2 → Ethereum"],
           ].map(([k, v, s]) => (
             <div key={k} className="py-4 md:px-6 first:md:pl-0">
               <div className="hud">{k}</div>

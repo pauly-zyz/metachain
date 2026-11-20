@@ -4,9 +4,9 @@
 
 :root {
   color-scheme: dark;
-  --plasma: #ff5b1f;
-  --amber: #ffb020;
-  --line: #1d1e24;
+  --plasma: #0866ff;
+  --amber: #5cc8ff;
+  --line: #182133;
 }
 
 html {
@@ -14,13 +14,13 @@ html {
 }
 
 body {
-  background: #07070a;
-  color: #ece8e1;
+  background: #05070d;
+  color: #e7edf7;
   font-family: Inter, system-ui, sans-serif;
 }
 
 ::selection {
-  background: rgba(255, 91, 31, 0.35);
+  background: rgba(8, 102, 255, 0.35);
   color: #fff;
 }
 
@@ -38,7 +38,7 @@ code {
   .brackets,
   .btn-plasma::before,
   .btn-ghost::before {
-    --c: rgba(255, 91, 31, 0.9);
+    --c: rgba(8, 102, 255, 0.9);
     --s: 10px;
     background-image:
       linear-gradient(var(--c), var(--c)), linear-gradient(var(--c), var(--c)),
@@ -54,7 +54,7 @@ code {
     background-repeat: no-repeat;
   }
   .brackets-dim {
-    --c: rgba(236, 232, 225, 0.22);
+    --c: rgba(231, 237, 247, 0.22);
   }
 
   .btn-plasma,
@@ -70,16 +70,16 @@ code {
   }
   .btn-plasma {
     @apply bg-accent font-semibold text-ink hover:bg-accent-glow;
-    box-shadow: 0 0 40px -8px rgba(255, 91, 31, 0.7);
+    box-shadow: 0 0 40px -8px rgba(8, 102, 255, 0.7);
   }
   .btn-plasma::before {
-    --c: rgba(255, 176, 32, 0.95);
+    --c: rgba(92, 200, 255, 0.95);
   }
   .btn-ghost {
     @apply border border-ink-line bg-ink/60 font-medium text-bone hover:border-accent/60 hover:text-white;
   }
   .btn-ghost::before {
-    --c: rgba(236, 232, 225, 0.35);
+    --c: rgba(231, 237, 247, 0.35);
   }
 
   .panel {
@@ -88,13 +88,13 @@ code {
 
   .grid-bg {
     background-image:
-      linear-gradient(rgba(236, 232, 225, 0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(236, 232, 225, 0.035) 1px, transparent 1px);
+      linear-gradient(rgba(231, 237, 247, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(231, 237, 247, 0.035) 1px, transparent 1px);
     background-size: 56px 56px;
   }
 
   .text-glow {
-    text-shadow: 0 0 32px rgba(255, 91, 31, 0.55);
+    text-shadow: 0 0 32px rgba(8, 102, 255, 0.55);
   }
 
   .reveal {

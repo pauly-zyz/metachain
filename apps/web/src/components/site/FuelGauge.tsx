@@ -35,12 +35,12 @@ export function FuelGauge() {
 
   return (
     <div className="relative mx-auto aspect-square w-full max-w-[460px]">
-      <svg viewBox="0 0 400 400" className="h-full w-full" role="img" aria-label="Gauge harga META/USD live">
+      <svg viewBox="0 0 400 400" className="h-full w-full" role="img" aria-label="Live META/USD price gauge">
         <defs>
           <radialGradient id="core" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#ff5b1f" stopOpacity="0.22" />
-            <stop offset="70%" stopColor="#ff5b1f" stopOpacity="0.03" />
-            <stop offset="100%" stopColor="#ff5b1f" stopOpacity="0" />
+            <stop offset="0%" stopColor="#0866ff" stopOpacity="0.22" />
+            <stop offset="70%" stopColor="#0866ff" stopOpacity="0.03" />
+            <stop offset="100%" stopColor="#0866ff" stopOpacity="0" />
           </radialGradient>
           <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="3" result="b" />
@@ -56,7 +56,7 @@ export function FuelGauge() {
           {Array.from({ length: 120 }, (_, i) => {
             const [x0, y0] = polar(188, i * 3);
             const [x1, y1] = polar(i % 10 === 0 ? 178 : 183, i * 3);
-            return <line key={i} x1={x0} y1={y0} x2={x1} y2={y1} stroke="#ece8e1" strokeOpacity={i % 10 === 0 ? 0.35 : 0.12} />;
+            return <line key={i} x1={x0} y1={y0} x2={x1} y2={y1} stroke="#e7edf7" strokeOpacity={i % 10 === 0 ? 0.35 : 0.12} />;
           })}
         </g>
         {/* segments */}
@@ -68,7 +68,7 @@ export function FuelGauge() {
               <path
                 key={i}
                 d={segmentPath(i)}
-                fill={on ? (hot > 0.8 ? "#ffb020" : "#ff5b1f") : "#1d1e24"}
+                fill={on ? (hot > 0.8 ? "#5cc8ff" : "#0866ff") : "#182133"}
                 fillOpacity={on ? 0.55 + hot * 0.45 : 0.9}
                 style={{ transition: `fill .5s ${i * 12}ms, fill-opacity .5s ${i * 12}ms` }}
               />
@@ -76,8 +76,8 @@ export function FuelGauge() {
           })}
         </g>
         {/* inner ring */}
-        <circle cx="200" cy="200" r="126" fill="none" stroke="#ece8e1" strokeOpacity="0.08" />
-        <circle cx="200" cy="200" r="118" fill="none" stroke="#ff5b1f" strokeOpacity="0.25" strokeDasharray="2 6" />
+        <circle cx="200" cy="200" r="126" fill="none" stroke="#e7edf7" strokeOpacity="0.08" />
+        <circle cx="200" cy="200" r="118" fill="none" stroke="#0866ff" strokeOpacity="0.25" strokeDasharray="2 6" />
       </svg>
 
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -90,7 +90,7 @@ export function FuelGauge() {
         </span>
         <span className="mt-4 inline-flex items-center gap-2 border border-ink-line bg-ink/70 px-3 py-1 font-mono text-[10px] tracking-hud text-bone">
           <span className={`h-1.5 w-1.5 animate-pulseDot ${data?.mode === "open" ? "bg-good" : "bg-amber"}`} />
-          {data ? MODE_LABEL[data.mode] : "MEMUAT ORACLE"}
+          {data ? MODE_LABEL[data.mode] : "LOADING ORACLE"}
         </span>
       </div>
 
@@ -98,7 +98,7 @@ export function FuelGauge() {
       <span className="hud absolute bottom-[14%] left-[16%]">0%</span>
       <span className="hud absolute bottom-[14%] right-[13%]">100%</span>
       <span className="hud absolute bottom-[4%] left-1/2 -translate-x-1/2 whitespace-nowrap">
-        Konsensus oracle {Math.round(consensus * 100)}%
+        Oracle consensus {Math.round(consensus * 100)}%
       </span>
     </div>
   );

@@ -105,8 +105,8 @@ export function useMainnetOracle() {
 }
 
 export const MODE_LABEL: Record<OracleMode, string> = {
-  open: "PASAR BUKA",
-  closed: "PASAR TUTUP",
+  open: "MARKET OPEN",
+  closed: "MARKET CLOSED",
   fallback: "FALLBACK TWAP",
 };
 
