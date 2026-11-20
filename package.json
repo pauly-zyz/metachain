@@ -1,0 +1,19 @@
+{
+  "name": "metachain",
+  "private": true,
+  "version": "0.1.0",
+  "description": "META Chain — pay gas with META Stock Token on Robinhood Chain (ERC-4337 paymaster). Not affiliated with Meta Platforms or Robinhood.",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "gen:abis": "node scripts/gen-abis.mjs",
+    "build": "npm run build -w @metachain/sdk && npm run build -w @metachain/web",
+    "test": "npm test -w @metachain/sdk",
+    "test:contracts": "cd contracts && forge test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

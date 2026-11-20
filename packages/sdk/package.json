@@ -1,0 +1,40 @@
+{
+  "name": "@metachain/sdk",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for META Chain: smart accounts that pay gas in META Stock Token on Robinhood Chain, USD/META fee estimates, and bounded session keys for AI agents. Not affiliated with Meta Platforms or Robinhood.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run test/unit",
+    "test:e2e": "vitest run test/e2e",
+    "example:agent": "tsx examples/agent-autonomous-payments.ts",
+    "keeper": "tsx examples/keeper.ts"
+  },
+  "dependencies": {
+    "@rhinestone/module-sdk": "0.4.0",
+    "permissionless": "0.5.2",
+    "viem": "2.58.2"
+  },
+  "devDependencies": {
+    "@pimlico/alto": "0.0.21",
+    "@types/node": "22.10.2",
+    "tsup": "8.5.0",
+    "tsx": "4.19.2",
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
+  }
+}
