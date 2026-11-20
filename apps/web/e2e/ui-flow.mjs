@@ -66,8 +66,8 @@ async function clickAndWait(button, okText) {
 }
 
 // ---------------------------------------------------------------- Account page
-await page.goto(BASE);
-await page.getByRole("button", { name: "Hubungkan wallet" }).click();
+await page.goto(`${BASE}/app`);
+await page.getByRole("button", { name: "Hubungkan wallet" }).first().click();
 await waitStatus("Smart account");
 await page.waitForFunction(() => !document.body.textContent?.includes("menghitung…"), null, { timeout: 60_000 });
 await page.screenshot({ path: `${SHOTS}/1-account-connected.png`, fullPage: true });

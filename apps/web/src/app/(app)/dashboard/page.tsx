@@ -72,8 +72,8 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-white">Dashboard publik</h1>
-        <p className="mt-1 text-sm text-slate-400">Statistik paymaster dan harga oracle langsung dari kontrak (tanpa wallet).</p>
+        <h1 className="font-display text-4xl font-semibold uppercase leading-none text-white sm:text-5xl">Dashboard publik</h1>
+        <p className="mt-1 text-sm text-bone-mute">Statistik paymaster dan harga oracle langsung dari kontrak (tanpa wallet).</p>
       </div>
       {data.error && <Notice tone="bad">Gagal membaca kontrak: {errMsg(data.error)}</Notice>}
       {config.network === "mainnet" && <LiveMainnetOracle />}
@@ -113,7 +113,7 @@ export default function DashboardPage() {
                   <span className="text-bad">Circuit breaker / tidak ada harga aman</span>
                 )}
               </Row>
-              {d.liveError && <p className="mt-2 text-xs text-red-300 break-words">{d.liveError}</p>}
+              {d.liveError && <p className="mt-2 text-xs text-bad break-words">{d.liveError}</p>}
             </Card>
           </div>
 
@@ -121,7 +121,7 @@ export default function DashboardPage() {
             {d.recent.length ? (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="text-left text-xs uppercase text-slate-400">
+                  <thead className="text-left font-mono text-[10px] uppercase tracking-wide2 text-bone-mute">
                     <tr>
                       <th className="py-2">Akun</th>
                       <th>META</th>
@@ -146,7 +146,7 @@ export default function DashboardPage() {
                 </table>
               </div>
             ) : (
-              <p className="text-sm text-slate-400">Belum ada transaksi.</p>
+              <p className="text-sm text-bone-mute">Belum ada transaksi.</p>
             )}
           </Card>
 

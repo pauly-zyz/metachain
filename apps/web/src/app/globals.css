@@ -4,8 +4,125 @@
 
 :root {
   color-scheme: dark;
+  --plasma: #ff5b1f;
+  --amber: #ffb020;
+  --line: #1d1e24;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #07070a;
+  color: #ece8e1;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+::selection {
+  background: rgba(255, 91, 31, 0.35);
+  color: #fff;
 }
 
 code {
-  @apply rounded bg-ink px-1 py-0.5 font-mono text-[0.85em] text-slate-200;
+  @apply rounded bg-ink-deep px-1 py-0.5 font-mono text-[0.85em] text-bone;
+}
+
+@layer components {
+  /* micro HUD label: tiny, mono, very wide tracking */
+  .hud {
+    @apply font-mono text-[10px] uppercase tracking-hud text-bone-mute;
+  }
+
+  /* corner brackets drawn with layered background-images (keeps background-color intact) */
+  .brackets,
+  .btn-plasma::before,
+  .btn-ghost::before {
+    --c: rgba(255, 91, 31, 0.9);
+    --s: 10px;
+    background-image:
+      linear-gradient(var(--c), var(--c)), linear-gradient(var(--c), var(--c)),
+      linear-gradient(var(--c), var(--c)), linear-gradient(var(--c), var(--c)),
+      linear-gradient(var(--c), var(--c)), linear-gradient(var(--c), var(--c)),
+      linear-gradient(var(--c), var(--c)), linear-gradient(var(--c), var(--c));
+    background-size:
+      var(--s) 1px, 1px var(--s), var(--s) 1px, 1px var(--s),
+      var(--s) 1px, 1px var(--s), var(--s) 1px, 1px var(--s);
+    background-position:
+      top left, top left, top right, top right,
+      bottom left, bottom left, bottom right, bottom right;
+    background-repeat: no-repeat;
+  }
+  .brackets-dim {
+    --c: rgba(236, 232, 225, 0.22);
+  }
+
+  .btn-plasma,
+  .btn-ghost {
+    @apply relative inline-flex items-center gap-3 px-6 py-3 font-display text-sm uppercase tracking-wide2 transition;
+  }
+  .btn-plasma::before,
+  .btn-ghost::before {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    pointer-events: none;
+  }
+  .btn-plasma {
+    @apply bg-accent font-semibold text-ink hover:bg-accent-glow;
+    box-shadow: 0 0 40px -8px rgba(255, 91, 31, 0.7);
+  }
+  .btn-plasma::before {
+    --c: rgba(255, 176, 32, 0.95);
+  }
+  .btn-ghost {
+    @apply border border-ink-line bg-ink/60 font-medium text-bone hover:border-accent/60 hover:text-white;
+  }
+  .btn-ghost::before {
+    --c: rgba(236, 232, 225, 0.35);
+  }
+
+  .panel {
+    @apply relative border border-ink-line bg-ink-soft/80 backdrop-blur-sm;
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(236, 232, 225, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(236, 232, 225, 0.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .text-glow {
+    text-shadow: 0 0 32px rgba(255, 91, 31, 0.55);
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

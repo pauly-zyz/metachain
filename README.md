@@ -13,7 +13,7 @@ Uniswap V3 dengan circuit breaker).
 > beberapa yurisdiksi lain (antara lain Kanada, Inggris, Swiss). Perangkat lunak ini eksperimental dan **belum diaudit**.
 > Bukan nasihat investasi.
 
-![Akun: transaksi dibayar META](docs/screenshots/2-account-paid-in-meta.png)
+![META Chain — landing](docs/screenshots/7-landing-hero.png)
 
 ## Isi repositori
 

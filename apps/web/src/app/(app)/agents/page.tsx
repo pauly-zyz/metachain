@@ -208,8 +208,8 @@ export default function AgentsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-white">Agen AI</h1>
-        <p className="mt-1 text-sm text-slate-400">
+        <h1 className="font-display text-4xl font-semibold uppercase leading-none text-white sm:text-5xl">Agen AI</h1>
+        <p className="mt-1 text-sm text-bone-mute">
           Beri agen AI session key yang hanya boleh memanggil <code>AgentPayments.pay</code>, dengan masa berlaku, batas jumlah
           pemakaian, batas belanja per periode (META & USD), rate limit, dan plafon allowance. Gas dibayar META.
         </p>
@@ -235,7 +235,7 @@ export default function AgentsPage() {
                 Buat & unduh kredensial agen
               </Button>
             </div>
-            <p className="mt-2 text-xs text-slate-500">
+            <p className="mt-2 text-xs text-bone-mute">
               Kunci privat session dibuat di browser dan hanya diberikan sebagai file unduhan; aplikasi tidak menyimpannya.
             </p>
           </Card>
@@ -249,7 +249,7 @@ export default function AgentsPage() {
                 <Row label="Periode berakhir">{ts(limits.data[3])}</Row>
               </>
             ) : (
-              <p className="text-sm text-slate-400">Belum ada batas yang diatur.</p>
+              <p className="text-sm text-bone-mute">Belum ada batas yang diatur.</p>
             )}
           </Card>
         </div>
@@ -259,7 +259,7 @@ export default function AgentsPage() {
         <Card title="Session key">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="text-left text-xs uppercase text-slate-400">
+              <thead className="text-left font-mono text-[10px] uppercase tracking-wide2 text-bone-mute">
                 <tr>
                   <th className="py-2">Label</th>
                   <th>Session key</th>
@@ -309,7 +309,7 @@ export default function AgentsPage() {
           {history.data && history.data.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="text-left text-xs uppercase text-slate-400">
+                <thead className="text-left font-mono text-[10px] uppercase tracking-wide2 text-bone-mute">
                   <tr>
                     <th className="py-2">#</th>
                     <th>Penerima</th>
@@ -338,7 +338,7 @@ export default function AgentsPage() {
               </table>
             </div>
           ) : (
-            <p className="text-sm text-slate-400">Belum ada pembayaran agen dari akun ini.</p>
+            <p className="text-sm text-bone-mute">Belum ada pembayaran agen dari akun ini.</p>
           )}
         </Card>
       )}

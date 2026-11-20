@@ -1,32 +1,33 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
-import { Header } from "@/components/Header";
 import { DisclaimerBanner } from "@/components/DisclaimerBanner";
-import { ConfigNotice } from "@/components/ConfigNotice";
 
 export const metadata: Metadata = {
-  title: "META Chain",
+  title: "META CHAIN — Equity is fuel",
   description:
-    "Bayar gas di Robinhood Chain dengan META Stock Token (ERC-4337 paymaster). Tidak berafiliasi dengan Meta Platforms maupun Robinhood.",
+    "Bayar gas di Robinhood Chain dengan META Stock Token (ERC-4337 paymaster), dipatok USD dan dihargai oracle Chainlink + TWAP. Tidak berafiliasi dengan Meta Platforms maupun Robinhood.",
 };
+
+export const viewport: Viewport = { themeColor: "#07070a" };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="id">
-      <body className="min-h-screen bg-ink text-slate-200 antialiased">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        />
+      </head>
+      <body className="min-h-screen bg-ink font-sans text-bone antialiased">
         <Providers>
           <DisclaimerBanner />
-          <Header />
-          <main className="mx-auto max-w-5xl space-y-6 px-4 py-8">
-            <ConfigNotice />
-            {children}
-          </main>
-          <footer className="mx-auto max-w-5xl px-4 pb-10 text-xs text-slate-500">
-            META Chain adalah perangkat lunak eksperimental, belum diaudit. Tidak berafiliasi dengan Meta Platforms, Inc.
-            maupun Robinhood. Tidak untuk U.S. Persons.
-          </footer>
+          {children}
         </Providers>
       </body>
     </html>

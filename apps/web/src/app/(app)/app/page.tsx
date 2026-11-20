@@ -18,6 +18,7 @@ import { config } from "@/lib/config";
 import { useMetaAccount } from "@/lib/useMetaAccount";
 import { errMsg, eth, meta, short, ts, usd } from "@/lib/format";
 import { Badge, Button, Card, Field, Notice, Row, TxLink } from "@/components/ui";
+import { AppIntro } from "@/components/AppIntro";
 
 type Status = { tone: "good" | "warn" | "bad" | "neutral"; msg: string; hash?: string } | null;
 
@@ -92,14 +93,14 @@ export default function AccountPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-white">Bayar gas dengan META</h1>
-        <p className="mt-1 text-sm text-slate-400">
+        <h1 className="font-display text-4xl font-semibold uppercase leading-none text-white sm:text-5xl">Bayar gas dengan META</h1>
+        <p className="mt-1 text-sm text-bone-mute">
           Smart account (Kernel v3.1, ERC-4337) yang membayar biaya transaksi Robinhood Chain dalam META Stock Token. Biaya
           dipatok dalam USD; jumlah META menyesuaikan harga oracle.
         </p>
       </div>
 
-      {!eoa && <Notice>Hubungkan wallet (MetaMask atau wallet EVM lain) untuk membuat smart account.</Notice>}
+      {!eoa && <AppIntro />}
       {accountError && <Notice tone="bad">Gagal menurunkan smart account: {errMsg(accountError)}</Notice>}
 
       {eoa && a && (
@@ -156,7 +157,7 @@ export default function AccountPage() {
               </div>
               {!r?.deployed || (r && r.allowance === 0n) ? (
                 <>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-bone-mute">
                     Operasi pertama (deploy akun + izin META ke paymaster) dibayar sekali dengan ETH, karena paymaster menarik
                     META sebelum izin di operasi yang sama dieksekusi. Biaya nyatanya hanya beberapa sen; 0.003 ETH dibutuhkan
                     agar simulasi bundler lolos, dan sisanya tetap menjadi milik smart account Anda.
@@ -263,8 +264,8 @@ export default function AccountPage() {
             </div>
             <div>
               {estimate && (
-                <div className="rounded-lg border border-ink-line bg-ink p-3">
-                  <div className="mb-2 text-xs uppercase tracking-wide text-slate-400">Estimasi sebelum kirim</div>
+                <div className="border border-ink-line bg-ink p-3">
+                  <div className="hud mb-2">Estimasi sebelum kirim</div>
                   <Row label="Maks. (pre-charge)">
                     {meta(estimate.maxMeta, 8)} ≈ {usd(estimate.maxUsd)}
                   </Row>
@@ -273,14 +274,14 @@ export default function AccountPage() {
                   <Row label="Markup">{Number(estimate.markupBps) / 100}%</Row>
                   <Row label="Mode harga">{estimate.modeLabel}</Row>
                   <Row label="Harga berlaku s/d">{ts(estimate.priceValidUntil)}</Row>
-                  <p className="mt-2 text-xs text-slate-500">
+                  <p className="mt-2 text-xs text-bone-mute">
                     Pre-charge ditarik di awal; selisih dikembalikan otomatis di postOp.
                   </p>
                 </div>
               )}
               {paid && (
-                <div className="mt-3 rounded-lg border border-good/40 bg-good/10 p-3">
-                  <div className="mb-2 text-xs uppercase tracking-wide text-green-300">Biaya aktual</div>
+                <div className="mt-3 border border-good/40 bg-good/5 p-3">
+                  <div className="hud mb-2 text-good">Biaya aktual</div>
                   <Row label="META ditagih">{meta(paid.metaCharged, 8)}</Row>
                   <Row label="Setara USD">{usd(paid.usdCharged)}</Row>
                   <Row label="Biaya gas (ETH)">{eth(paid.gasCostWei, 9)}</Row>

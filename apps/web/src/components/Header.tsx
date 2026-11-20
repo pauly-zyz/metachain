@@ -4,9 +4,10 @@ import { usePathname } from "next/navigation";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { config } from "@/lib/config";
 import { short } from "@/lib/format";
+import { Logo } from "./site/Logo";
 
 const NAV = [
-  { href: "/", label: "Akun" },
+  { href: "/app", label: "Akun" },
   { href: "/agents", label: "Agen AI" },
   { href: "/dashboard", label: "Dashboard" },
 ];
@@ -16,36 +17,38 @@ export function Header() {
   const { address, isConnected } = useAccount();
   const { connect, connectors, isPending } = useConnect();
   const { disconnect } = useDisconnect();
-  const network = { local: "Lokal (fork testnet)", testnet: "Robinhood Chain Testnet", mainnet: "Robinhood Chain" }[
-    config.network
-  ];
+  const network = { local: "LOKAL · FORK TESTNET", testnet: "TESTNET · 46630", mainnet: "MAINNET · 4663" }[config.network];
 
   return (
-    <header className="border-b border-ink-line bg-ink/80 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="font-semibold text-white">
-            META<span className="text-accent">Chain</span>
+    <header className="sticky top-0 z-40 border-b border-ink-line bg-ink/85 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-6xl flex-wrap items-center justify-between gap-3 px-4 sm:px-6">
+        <div className="flex items-center gap-8">
+          <Link href="/" aria-label="Beranda">
+            <Logo />
           </Link>
-          <nav className="flex gap-1 text-sm">
+          <nav className="flex gap-1">
             {NAV.map((n) => (
               <Link
                 key={n.href}
                 href={n.href}
-                className={`rounded-md px-3 py-1.5 ${path === n.href ? "bg-accent-soft text-white" : "text-slate-400 hover:text-white"}`}
+                className={`relative px-3 py-2 font-mono text-[11px] uppercase tracking-wide2 transition ${path === n.href ? "text-white" : "text-bone-mute hover:text-white"}`}
               >
                 {n.label}
+                {path === n.href && <span className="absolute inset-x-3 -bottom-[17px] h-px bg-accent" />}
               </Link>
             ))}
           </nav>
         </div>
-        <div className="flex items-center gap-3 text-sm">
-          <span className="hidden rounded-full border border-ink-line px-2.5 py-1 text-xs text-slate-400 sm:inline">{network}</span>
+        <div className="flex items-center gap-4">
+          <span className="hidden items-center gap-2 font-mono text-[10px] tracking-hud text-bone-mute md:flex">
+            <span className={`h-1.5 w-1.5 animate-pulseDot ${config.network === "mainnet" ? "bg-good" : "bg-amber"}`} />
+            {network}
+          </span>
           {isConnected ? (
             <button
               onClick={() => disconnect()}
-              className="rounded-lg border border-ink-line px-3 py-1.5 font-mono text-slate-200 hover:border-slate-500"
-              title="Putuskan"
+              className="btn-ghost !px-3 !py-1.5 !font-mono !text-xs !normal-case !tracking-normal"
+              title="Putuskan wallet"
             >
               {short(address)}
             </button>
@@ -53,7 +56,7 @@ export function Header() {
             <button
               onClick={() => connectors[0] && connect({ connector: connectors[0] })}
               disabled={isPending || !connectors[0]}
-              className="rounded-lg bg-accent px-3 py-1.5 font-medium text-white hover:bg-blue-500 disabled:opacity-40"
+              className="btn-plasma !px-4 !py-2 !text-xs disabled:opacity-40"
             >
               {isPending ? "Menghubungkan…" : "Hubungkan wallet"}
             </button>

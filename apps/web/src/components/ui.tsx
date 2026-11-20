@@ -3,9 +3,9 @@ import type { ReactNode } from "react";
 
 export function Card({ title, children, right }: { title: string; children: ReactNode; right?: ReactNode }) {
   return (
-    <section className="rounded-xl border border-ink-line bg-ink-soft p-5">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <h2 className="text-base font-semibold text-white">{title}</h2>
+    <section className="panel brackets p-5 sm:p-6">
+      <div className="mb-5 flex items-center justify-between gap-3 border-b border-ink-line pb-4">
+        <h2 className="font-display text-lg font-semibold uppercase tracking-wide text-white">{title}</h2>
         {right}
       </div>
       {children}
@@ -27,16 +27,16 @@ export function Button({
   type?: "button" | "submit";
 }) {
   const styles = {
-    primary: "bg-accent text-white hover:bg-blue-500",
-    secondary: "border border-ink-line bg-ink text-slate-200 hover:border-slate-500",
-    danger: "bg-bad/90 text-white hover:bg-bad",
+    primary: "btn-plasma !px-4 !py-2 !text-xs",
+    secondary: "btn-ghost !px-4 !py-2 !text-xs",
+    danger: "inline-flex items-center border border-bad/60 bg-bad/10 px-4 py-2 font-display text-xs uppercase tracking-wide2 text-bad hover:bg-bad/20",
   }[variant];
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`rounded-lg px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-40 ${styles}`}
+      className={`transition disabled:cursor-not-allowed disabled:opacity-40 ${styles}`}
     >
       {children}
     </button>
@@ -45,41 +45,41 @@ export function Button({
 
 export function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="flex items-baseline justify-between gap-4 border-b border-ink-line/60 py-2 text-sm last:border-0">
-      <span className="text-slate-400">{label}</span>
-      <span className="text-right font-mono text-slate-100 break-all">{children}</span>
+    <div className="flex items-baseline justify-between gap-4 border-b border-ink-line/60 py-2.5 text-sm last:border-0">
+      <span className="font-mono text-[11px] uppercase tracking-wide2 text-bone-mute">{label}</span>
+      <span className="text-right font-mono text-bone break-all">{children}</span>
     </div>
   );
 }
 
 export function Stat({ label, value, hint }: { label: string; value: ReactNode; hint?: ReactNode }) {
   return (
-    <div className="rounded-xl border border-ink-line bg-ink-soft p-4">
-      <div className="text-xs uppercase tracking-wide text-slate-400">{label}</div>
-      <div className="mt-1 font-mono text-xl text-white">{value}</div>
-      {hint && <div className="mt-1 text-xs text-slate-500">{hint}</div>}
+    <div className="panel p-5">
+      <div className="hud">{label}</div>
+      <div className="mt-2 font-display text-2xl font-semibold text-white">{value}</div>
+      {hint && <div className="hud mt-1 text-bone-dim">{hint}</div>}
     </div>
   );
 }
 
 export function Badge({ tone, children }: { tone: "good" | "warn" | "bad" | "neutral"; children: ReactNode }) {
   const cls = {
-    good: "bg-good/15 text-good",
-    warn: "bg-warn/15 text-warn",
-    bad: "bg-bad/15 text-bad",
-    neutral: "bg-slate-500/15 text-slate-300",
+    good: "border-good/40 text-good",
+    warn: "border-warn/40 text-warn",
+    bad: "border-bad/40 text-bad",
+    neutral: "border-ink-line text-bone-dim",
   }[tone];
-  return <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${cls}`}>{children}</span>;
+  return <span className={`border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide2 ${cls}`}>{children}</span>;
 }
 
 export function Notice({ tone = "neutral", children }: { tone?: "good" | "warn" | "bad" | "neutral"; children: ReactNode }) {
   const cls = {
-    good: "border-good/40 bg-good/10 text-green-200",
-    warn: "border-warn/40 bg-warn/10 text-amber-200",
-    bad: "border-bad/40 bg-bad/10 text-red-200",
-    neutral: "border-ink-line bg-ink text-slate-300",
+    good: "border-good/40 bg-good/5 text-good",
+    warn: "border-warn/40 bg-warn/5 text-amber",
+    bad: "border-bad/40 bg-bad/5 text-bad",
+    neutral: "border-ink-line bg-ink-soft text-bone-dim",
   }[tone];
-  return <div className={`rounded-lg border px-3 py-2 text-sm break-words ${cls}`}>{children}</div>;
+  return <div className={`border-l-2 border px-4 py-3 text-sm break-words ${cls}`}>{children}</div>;
 }
 
 export function Field({
@@ -97,14 +97,14 @@ export function Field({
 }) {
   return (
     <label className="block text-sm">
-      <span className="text-slate-300">{label}</span>
+      <span className="font-mono text-[11px] uppercase tracking-wide2 text-bone-dim">{label}</span>
       <input
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-1 w-full rounded-lg border border-ink-line bg-ink px-3 py-2 font-mono text-slate-100 outline-none focus:border-accent"
+        className="mt-1.5 w-full border border-ink-line bg-ink-deep px-3 py-2.5 font-mono text-bone outline-none transition focus:border-accent focus:shadow-[0_0_0_3px_rgba(255,91,31,0.12)]"
       />
-      {hint && <span className="mt-1 block text-xs text-slate-500">{hint}</span>}
+      {hint && <span className="mt-1 block text-xs text-bone-mute">{hint}</span>}
     </label>
   );
 }
