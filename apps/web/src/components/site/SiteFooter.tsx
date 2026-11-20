@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
+import { METAC } from "@/lib/token";
+import { CopyCA } from "./TokenSection";
 
 export function SiteFooter() {
   return (
@@ -37,6 +39,13 @@ export function SiteFooter() {
           <div className="mb-4 flex items-center justify-between">
             <Logo />
             <span className="hud">ROBINHOOD CHAIN · 4663</span>
+          </div>
+          <div className="mb-5 flex flex-wrap items-center gap-3 border border-ink-line bg-ink-soft px-4 py-3">
+            <span className="hud text-accent">${METAC.symbol} CA</span>
+            <a href={METAC.explorer} target="_blank" rel="noreferrer" className="break-all font-mono text-xs text-bone hover:text-accent">
+              {METAC.address}
+            </a>
+            <CopyCA compact />
           </div>
           <p>
             META Chain is experimental, unaudited software. <strong className="text-bone-dim">Not affiliated</strong> with Meta

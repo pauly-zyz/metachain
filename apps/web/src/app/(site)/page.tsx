@@ -1,6 +1,7 @@
 import { SiteNav } from "@/components/site/SiteNav";
 import { Hero } from "@/components/site/Hero";
 import { LiveTicker } from "@/components/site/LiveTicker";
+import { TokenSection } from "@/components/site/TokenSection";
 import { HowItWorks } from "@/components/site/HowItWorks";
 import { Pricing } from "@/components/site/Pricing";
 import { Agents } from "@/components/site/Agents";
@@ -16,6 +17,7 @@ export default function Landing() {
       <main>
         <Hero />
         <LiveTicker />
+        <TokenSection />
         <HowItWorks />
         <Pricing />
         <Agents />

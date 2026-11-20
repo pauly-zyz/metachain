@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 
 const LINKS = [
+  { href: "#token", label: "$METAC" },
   { href: "#how-it-works", label: "How it works" },
   { href: "#pricing", label: "Pricing" },
   { href: "#agents", label: "AI agents" },
@@ -46,7 +47,7 @@ export function SiteNav() {
           <span className="hidden items-center gap-2 font-mono text-[10px] tracking-hud text-bone-mute sm:flex">
             ORACLE <span className="h-1.5 w-1.5 animate-pulseDot bg-good" /> <span className="text-good">LIVE</span>
           </span>
-          <Link href="/app" className="btn-plasma !px-4 !py-2 !text-xs">
+          <Link href="/app" className="btn-plasma whitespace-nowrap !px-4 !py-2 !text-xs">
             Launch App
           </Link>
           <button className="text-bone lg:hidden" onClick={() => setOpen((o) => !o)} aria-label="Menu" aria-expanded={open}>
