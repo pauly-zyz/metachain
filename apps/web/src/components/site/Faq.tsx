@@ -33,7 +33,7 @@ const QA: [string, string][] = [
   ],
   [
     "Are the contracts audited and is mainnet live?",
-    "Not yet. The code is open source, tested (unit, fuzz, mainnet fork, end-to-end) and analysed with Slither, but not externally audited. The mainnet oracle on this site is live; the mainnet paymaster awaits an audit and the project owner's approval.",
+    "Not yet. The code is open source, tested (unit, fuzz, mainnet fork, end-to-end) and analysed with Slither, but not externally audited. The mainnet oracle on this site is live; the mainnet paymaster launches after its security review.",
   ],
 ];
 
