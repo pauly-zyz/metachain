@@ -52,5 +52,10 @@ for _ in $(seq 1 60); do curl -sf -X POST -H 'content-type: application/json' \
 case "$MODE" in
   test) E2E=1 npm run test:e2e -w @metachain/sdk ;;
   example) OWNER_PRIVATE_KEY=$K1 LOCAL_BOOTSTRAP=1 npm run example:agent -w @metachain/sdk ;;
-  up) echo "stack up: RPC http://127.0.0.1:8545  bundler http://127.0.0.1:4337  deployment contracts/deployments/anvil-testnet-fork.json"; wait ;;
+  up)
+    { echo "NEXT_PUBLIC_NETWORK=local"; echo "NEXT_PUBLIC_RPC_URL=http://127.0.0.1:8545";
+      echo "BUNDLER_RPC_URL=http://127.0.0.1:4337";
+      echo "NEXT_PUBLIC_DEPLOYMENT_JSON=$(tr -d '\n ' < contracts/deployments/anvil-testnet-fork.json)"; } > apps/web/.env.local
+    echo "wrote apps/web/.env.local"
+    echo "stack up: RPC http://127.0.0.1:8545  bundler http://127.0.0.1:4337  deployment contracts/deployments/anvil-testnet-fork.json"; wait ;;
 esac

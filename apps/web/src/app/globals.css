@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+code {
+  @apply rounded bg-ink px-1 py-0.5 font-mono text-[0.85em] text-slate-200;
+}
