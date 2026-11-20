@@ -32,7 +32,8 @@ function parseDeployment(): (DeploymentJson & { deployBlock?: number }) | null {
 }
 
 export function getConfig(): AppConfig {
-  const network = (process.env.NEXT_PUBLIC_NETWORK as NetworkName) || "local";
+  // Default to the public testnet; the local demo script sets NEXT_PUBLIC_NETWORK=local explicitly.
+  const network = (process.env.NEXT_PUBLIC_NETWORK as NetworkName) || "testnet";
   const base = network === "mainnet" ? robinhood : robinhoodTestnet;
   const rpcUrl =
     process.env.NEXT_PUBLIC_RPC_URL || (network === "local" ? "http://127.0.0.1:8545" : base.rpcUrls.default.http[0]!);

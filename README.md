@@ -203,6 +203,18 @@ Hasilnya `contracts/deployments/robinhood-testnet.json`. Langkah setelah deploy:
 Skrip ini sudah diuji penuh pada anvil fork testnet (`scripts/e2e-local.sh`). Biaya gas deploy ≈ 0,0003 ETH, ditambah
 deposit 0,02 ETH dan stake 0,005 ETH.
 
+### Website (Vercel)
+
+1. Di Vercel: **Add New Project** → impor repo ini → **Root Directory = `apps/web`**. Framework terdeteksi Next.js;
+   `apps/web/vercel.json` meng-install dari root monorepo (`npm ci`). SDK dikonsumsi langsung dari source, jadi tidak
+   ada langkah build terpisah.
+2. Environment variables:
+   - `NEXT_PUBLIC_NETWORK` = `testnet`
+   - `NEXT_PUBLIC_DEPLOYMENT_JSON` = isi `contracts/deployments/robinhood-testnet.json` (setelah deploy testnet)
+   - `BUNDLER_RPC_URL` = URL bundler (mis. Pimlico `robinhood-testnet` + API key). Ini server-only, tidak terekspos.
+3. Setiap push ke `main` otomatis di-deploy. Tanpa `NEXT_PUBLIC_DEPLOYMENT_JSON`, situs tetap tampil dengan pemberitahuan
+   "alamat kontrak belum dikonfigurasi".
+
 ### Mainnet
 
 `DeployMainnet` memakai META, Chainlink, dan pool V3 asli. Skrip **dikunci**: butuh
