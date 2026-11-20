@@ -6,6 +6,7 @@ import { config } from "@/lib/config";
 import { usePublicClient } from "@/lib/useMetaAccount";
 import { errMsg, eth, meta, short, ts, usd } from "@/lib/format";
 import { Badge, Card, Notice, Row, Stat, TxLink } from "@/components/ui";
+import { LiveMainnetOracle } from "@/components/LiveMainnetOracle";
 
 const feedAbi = parseAbi([
   "function latestRoundData() view returns (uint80, int256, uint256, uint256, uint80)",
@@ -75,6 +76,7 @@ export default function DashboardPage() {
         <p className="mt-1 text-sm text-slate-400">Statistik paymaster dan harga oracle langsung dari kontrak (tanpa wallet).</p>
       </div>
       {data.error && <Notice tone="bad">Gagal membaca kontrak: {errMsg(data.error)}</Notice>}
+      {config.network === "mainnet" && <LiveMainnetOracle />}
 
       {d && (
         <>

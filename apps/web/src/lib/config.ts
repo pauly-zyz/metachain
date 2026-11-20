@@ -19,6 +19,8 @@ export interface AppConfig {
   deployment: (DeploymentJson & { deployBlock?: number }) | null;
   explorer: string | null;
   isMock: boolean;
+  /** A NEXT_PUBLIC_DEPLOYMENT_JSON was provided but for a different chain id. */
+  deploymentChainMismatch: boolean;
 }
 
 function parseDeployment(): (DeploymentJson & { deployBlock?: number }) | null {
@@ -32,13 +34,15 @@ function parseDeployment(): (DeploymentJson & { deployBlock?: number }) | null {
 }
 
 export function getConfig(): AppConfig {
-  // Default to the public testnet; the local demo script sets NEXT_PUBLIC_NETWORK=local explicitly.
-  const network = (process.env.NEXT_PUBLIC_NETWORK as NetworkName) || "testnet";
+  // Default: Robinhood Chain mainnet. The local demo script sets NEXT_PUBLIC_NETWORK=local explicitly.
+  const network = (process.env.NEXT_PUBLIC_NETWORK as NetworkName) || "mainnet";
   const base = network === "mainnet" ? robinhood : robinhoodTestnet;
   const rpcUrl =
     process.env.NEXT_PUBLIC_RPC_URL || (network === "local" ? "http://127.0.0.1:8545" : base.rpcUrls.default.http[0]!);
   const chain = network === "local" ? localFork(base, rpcUrl) : base;
-  const deployment = parseDeployment();
+  const parsed = parseDeployment();
+  // Ignore a deployment file that belongs to another chain (e.g. testnet JSON on a mainnet site).
+  const deployment = parsed && Number(parsed.chainId) === chain.id ? parsed : null;
   return {
     network,
     chain,
@@ -51,6 +55,7 @@ export function getConfig(): AppConfig {
     deployment,
     explorer: network === "local" ? null : (base.blockExplorers?.default.url ?? null),
     isMock: network !== "mainnet",
+    deploymentChainMismatch: !!parsed && !deployment,
   };
 }
 
