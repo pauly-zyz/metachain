@@ -21,3 +21,4 @@ contracts/deployments/local.json
 apps/web/.env.local
 *.tsbuildinfo
 apps/web/next-env.d.ts
+.vercel/
