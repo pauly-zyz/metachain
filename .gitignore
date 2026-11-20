@@ -15,3 +15,6 @@ dist/
 __pycache__/
 scripts/feasibility/*.json
 scripts/feasibility/*.txt
+contracts/broadcast/
+contracts/deployments/anvil-*.json
+contracts/deployments/local.json

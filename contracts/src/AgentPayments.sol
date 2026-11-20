@@ -31,7 +31,7 @@ contract AgentPayments is Ownable2Step, ReentrancyGuard {
     error InvalidLimit();
 
     event TokenAllowed(address indexed token, bool allowed);
-    event OracleUpdated(address oracle);
+    event OracleUpdated(address indexed oracle);
     event LimitSet(address indexed payer, address indexed token, Limit limit);
     event PaymentSent(
         uint256 indexed id,

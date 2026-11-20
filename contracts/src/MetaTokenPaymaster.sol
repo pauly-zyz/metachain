@@ -65,7 +65,7 @@ contract MetaTokenPaymaster is BasePaymaster, Ownable2Step, Pausable, Reentrancy
     );
     event RefundDeferred(address indexed sender, uint256 amount);
     event RefundClaimed(address indexed sender, address indexed to, uint256 amount);
-    event OracleUpdated(address oracle);
+    event OracleUpdated(address indexed oracle);
     event FeeConfigUpdated(FeeConfig config);
     event UserLimitUpdated(UserLimit limit);
     event TokensWithdrawn(address indexed token, address indexed to, uint256 amount);
@@ -270,22 +270,24 @@ contract MetaTokenPaymaster is BasePaymaster, Ownable2Step, Pausable, Reentrancy
         uint256 usdCost = _weiToUsd(gasCostWei, ctx.ethUsd);
         uint256 charged = Math.min(_usdToMetaWithMarkup(usdCost, ctx.metaUsd, ctx.markupBps), ctx.preCharge);
         uint256 refund = ctx.preCharge - charged;
-
-        if (refund != 0 && !_tryTransfer(ctx.sender, refund)) {
-            owedRefunds[ctx.sender] += refund;
-            totalOwed += refund;
-            emit RefundDeferred(ctx.sender, refund);
-        }
-
         uint256 usdCharged = _metaToUsd(charged, ctx.metaUsd);
-        _accountUser(ctx.sender, usdCharged);
 
+        // effects before the (trusted-token) external call
+        _accountUser(ctx.sender, usdCharged);
         Stats memory st = stats;
         st.ops += 1;
         st.metaCollected += SafeCast.toUint192(charged);
         st.gasCostWei += SafeCast.toUint128(gasCostWei);
         st.usdCharged += SafeCast.toUint128(usdCharged);
         stats = st;
+
+        // External call to the trusted META token last; the deferred-refund bookkeeping must follow it.
+        // Reentrancy is not possible: postOp is only callable by the (nonReentrant) EntryPoint.
+        if (refund != 0 && !_tryTransfer(ctx.sender, refund)) {
+            owedRefunds[ctx.sender] += refund;
+            totalOwed += refund;
+            emit RefundDeferred(ctx.sender, refund);
+        }
 
         emit MetaGasPaid(
             ctx.sender, ctx.userOpHash, charged, gasCostWei, usdCharged, ctx.metaUsd, ctx.ethUsd, ctx.mode

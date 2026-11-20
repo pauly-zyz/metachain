@@ -34,8 +34,8 @@ contract MetaPriceOracle is IMetaPriceOracle, Ownable2Step {
 
     // ----------------------------------------------------------------- events
     event ConfigUpdated(Config config);
-    event TwapPoolUpdated(address pool);
-    event SequencerFeedUpdated(address feed);
+    event TwapPoolUpdated(address indexed pool);
+    event SequencerFeedUpdated(address indexed feed);
 
     // ----------------------------------------------------------------- types
     struct Config {
@@ -53,7 +53,6 @@ contract MetaPriceOracle is IMetaPriceOracle, Ownable2Step {
     }
 
     uint256 internal constant BPS = 10_000;
-    uint256 internal constant WAD = 1e18;
 
     // ----------------------------------------------------------------- immutables
     IStockToken public immutable META;
